@@ -6,6 +6,12 @@
   "vars": {
     // Нужен расписанию и подписям к постам: у cron нет запроса, из которого виден адрес.
     "SITE_URL": "https://chtotonapsy.norevia.workers.dev",
+    // Постоянный адрес журнала для читателей и поисковиков; воркер — только «мотор» и черновики.
+    "PUBLIC_URL": "https://konyaginaan.github.io/chtotonapsy",
+    "GITHUB_REPO": "konyaginaan/chtotonapsy",
+    // Коды подтверждения прав из Google Search Console и Яндекс.Вебмастера (метатег).
+    "GOOGLE_VERIFY": "",
+    "YANDEX_VERIFY": "",
     "CHANNEL": "@chtotonapsy",
     // Кому бот присылает черновики и напоминания; только этот человек может нажать «Опубликовать».
     "OWNER_ID": "400206093"

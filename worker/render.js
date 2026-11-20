@@ -13,6 +13,11 @@ const ORDER = ["science", "journals", "community", "ru", "media", "culture"];
 const MONTHS = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа",
   "сентября", "октября", "ноября", "декабря"];
 
+// Префикс ссылок: "" на воркере, "/chtotonapsy" на GitHub Pages. Задаётся в начале каждого
+// render*(): отрисовка синхронная, так что между запросами он не перепутается.
+let B = "";
+const issueHref = (id) => `${B}/issue/${id}/`;
+
 export const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) =>
   ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const safeUrl = (u) => (/^https?:\/\//i.test(u || "") ? esc(u) : "#");
@@ -223,7 +228,9 @@ dialog.note::backdrop{background:rgba(28,14,30,.5);backdrop-filter:blur(3px)}
 @keyframes up{from{transform:translateY(40px);opacity:.4}to{transform:none;opacity:1}}
 `;
 
-function layout({ title, description, body, env, path = "/", image }) {
+// env.PUBLIC_URL — постоянный адрес журнала (GitHub Pages); на воркере страницы закрыты от
+// индексации (NOINDEX), чтобы поисковики не видели два одинаковых сайта.
+function layout({ title, description, body, env, path = "/", image, noindex, ld }) {
   const ch = env.CHANNEL.replace(/^@/, "");
   return `<!doctype html><html lang="ru"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -231,7 +238,12 @@ function layout({ title, description, body, env, path = "/", image }) {
 <meta name="description" content="${esc(description)}">
 <meta property="og:type" content="website"><meta property="og:site_name" content="Что-то на психоаналитическом">
 <meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(description)}">
-<meta property="og:url" content="${esc(env.SITE_URL + path)}">
+<meta property="og:url" content="${esc(env.PUBLIC_URL + path)}">
+<link rel="canonical" href="${esc(env.PUBLIC_URL + path)}">
+${noindex || env.NOINDEX ? `<meta name="robots" content="noindex">` : ""}
+${env.GOOGLE_VERIFY ? `<meta name="google-site-verification" content="${esc(env.GOOGLE_VERIFY)}">` : ""}
+${env.YANDEX_VERIFY ? `<meta name="yandex-verification" content="${esc(env.YANDEX_VERIFY)}">` : ""}
+${ld ? `<script type="application/ld+json">${JSON.stringify(ld).replace(/</g, "\\u003c")}</script>` : ""}
 ${image ? `<meta property="og:image" content="${esc(image)}"><meta name="twitter:card" content="summary_large_image">` : ""}
 <meta name="color-scheme" content="light dark">
 <link rel="icon" href="data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="#7b3a63"/><text x="16" y="23" font-family="Georgia,serif" font-size="20" font-style="italic" text-anchor="middle" fill="#fff">ψ</text></svg>')}">
@@ -239,7 +251,7 @@ ${image ? `<meta property="og:image" content="${esc(image)}"><meta name="twitter
 <link rel="stylesheet" href="${FONTS}">
 <style>${CSS}</style></head><body>
 <header class="top"><div class="wrap">
-<a class="brand" href="/">Что-то на <i>психоаналитическом</i></a>
+<a class="brand" href="${B}/">Что-то на <i>психоаналитическом</i></a>
 <a class="tg" href="https://t.me/${esc(ch)}">✈︎ <span>Канал в Telegram</span></a>
 </div></header>
 ${body}
@@ -249,7 +261,7 @@ ${body}
   var d=document.getElementById('note'), box=d.querySelector('.ns');
   function open(id,mark){
     var t=document.getElementById('t-'+id); if(!t) return;
-    box.replaceChildren(t.content.cloneNode(true)); box.scrollTop=0;
+    box.innerHTML=t.innerHTML; box.scrollTop=0;
     if(!d.open) d.showModal();
     if(mark) history.replaceState(null,'','#r-'+id);
   }
@@ -266,16 +278,16 @@ ${body}
 
 const BOOK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2z"/><path d="M22 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"/></svg>';
 
-// Пересказ живёт в <template> рядом с материалом и открывается в общем окне — без отдельных страниц.
+// Пересказ лежит скрытым блоком рядом с материалом (его видят поисковики) и открывается в общем окне — без отдельных страниц.
 function retellingHtml(it, key, uid, meta) {
   const paras = String(it.retelling).split(/\n\s*\n/).map((p) => `<p>${esc(p.trim())}</p>`).join("");
-  return `<template id="t-${uid}"><div style="--c:var(--${key})">
+  return `<div hidden class="rtx" id="t-${uid}"><div style="--c:var(--${key})">
 <div class="meta">${meta}</div>
 <h3>${esc(it.title)}</h3>
 ${it.original || it.authors ? `<p class="orig">${[it.authors, it.original && `«${it.original}»`].filter(Boolean).map(esc).join(" · ")}</p>` : ""}
 <div class="nb">${paras}</div>
 <div class="nf"><span>Пересказ по ${esc(it.retelling_basis || "аннотации")}</span><a href="${safeUrl(it.url)}" target="_blank" rel="noopener">Оригинал ↗</a></div>
-</div></template>`;
+</div></div>`;
 }
 
 function itemHtml(it, key, issue, uid, showFrom) {
@@ -294,22 +306,23 @@ ${it.summary ? `<p class="sum">${esc(it.summary)}</p>` : ""}
 ${Array.isArray(it.articles) && it.articles.length ? `<ul class="arts">${it.articles.map((a) =>
   `<li><a href="${safeUrl(a.url)}" target="_blank" rel="noopener">${esc(a.title)}</a>${a.authors ? ` · ${esc(a.authors)}` : ""}${a.original ? `<span class="o">${esc(a.original)}</span>` : ""}</li>`).join("")}</ul>` : ""}
 ${it.retelling ? `<button class="rt" data-r="${esc(uid)}">${BOOK}Пересказ по-русски</button>${retellingHtml(it, key, uid, meta)}` : ""}
-${showFrom ? `<a class="from" href="/issue/${esc(issue.id)}">из выпуска № ${issue.number} · ${esc(period(issue.period_from, issue.period_to))}</a>` : ""}
+${showFrom ? `<a class="from" href="${issueHref(issue.id)}">из выпуска № ${issue.number} · ${esc(period(issue.period_from, issue.period_to))}</a>` : ""}
 </article>`;
 }
 
 export function renderIndex(issues, env) {
+  B = env.BASE || "";
   issues.forEach((is, i) => (is.number = issues.length - i));
   const last = issues[0];
   const total = issues.reduce((n, is) => n + countItems(is), 0);
 
   const feat = last ? `<section class="wrap"><div class="feat">
 <div><div class="over">Свежий выпуск · № ${last.number} · ${esc(period(last.period_from, last.period_to))}</div>
-<h2><a href="/issue/${esc(last.id)}">${esc(last.title)}</a></h2>
+<h2><a href="${issueHref(last.id)}">${esc(last.title)}</a></h2>
 <p class="lead">${esc(last.lead)}</p>
 <div class="chips">${sorted(last.sections).map((s) =>
-  `<a class="chip" style="--c:var(--${s.key})" href="/issue/${esc(last.id)}#${s.key}"><span class="dot"></span>${esc(SECTIONS[s.key].short)} · ${s.items.length}</a>`).join("")}</div></div>
-<a class="btn" href="/issue/${esc(last.id)}">Читать выпуск →</a>
+  `<a class="chip" style="--c:var(--${s.key})" href="${issueHref(last.id)}#${s.key}"><span class="dot"></span>${esc(SECTIONS[s.key].short)} · ${s.items.length}</a>`).join("")}</div></div>
+<a class="btn" href="${issueHref(last.id)}">Читать выпуск →</a>
 </div></section>` : `<section class="wrap"><div class="feat"><div><div class="over">Скоро</div>
 <h2>Первый выпуск готовится</h2><p class="lead">Каждую пятницу здесь будет появляться обзор недели: новые исследования, новости психоаналитического сообщества, книги, события и культура.</p></div></div></section>`;
 
@@ -326,7 +339,7 @@ export function renderIndex(issues, env) {
 <section class="wrap mast">
 <div class="over">Еженедельный обзор</div>
 <h1>Психоанализ <em>за неделю</em></h1>
-<p>Новые исследования, новости сообщества, книги, события и культура — всё, что связано с психоанализом. Выпуск выходит по пятницам.</p>
+<p>Всё, что за неделю вышло о психоанализе: исследования, новые статьи журналов, подкасты и видео, новости сообщества, книги и культура — с пересказами по-русски. Выпуск выходит по пятницам.</p>
 <div class="orn">ψ</div>
 </section>
 ${feat}
@@ -338,10 +351,10 @@ ${items.length ? `<div class="tools"><input class="search" type="search" placeho
 </main>
 <aside><div class="sticky">
 <div class="h-sec"><h2>Выпуски</h2></div>
-<ul class="issues">${issues.map((is) => `<li><a href="/issue/${esc(is.id)}">
+<ul class="issues">${issues.map((is) => `<li><a href="${issueHref(is.id)}">
 <div class="n">№ ${is.number}</div><div class="t">${esc(is.title)}</div>
 <div class="d">${esc(period(is.period_from, is.period_to))} · ${plural(countItems(is), "материал", "материала", "материалов")}</div></a></li>`).join("") || `<li class="empty">Пока пусто</li>`}</ul>
-<div class="about"><b>Как собирается обзор.</b> Каждую неделю мы просматриваем научные базы и журналы, сайты психоаналитических обществ, издательства и прессу. В обзор попадает только то, что можно открыть и проверить по ссылке.</div>
+<div class="about"><b>Как собирается обзор.</b> Каждую неделю мы просматриваем три десятка психоаналитических журналов, научные базы, подкасты и видеоканалы, сайты обществ, издательства и прессу. В обзор попадает только то, что можно открыть и проверить по ссылке; англоязычные материалы мы пересказываем по-русски.</div>
 </div></aside>
 </div>
 <script>
@@ -365,12 +378,15 @@ ${items.length ? `<div class="tools"><input class="search" type="search" placeho
 </script>`;
   return layout({
     title: "Психоанализ за неделю — Что-то на психоаналитическом",
-    description: "Еженедельный обзор: исследования, новости сообщества, книги, события и культура вокруг психоанализа.",
+    ld: { "@context": "https://schema.org", "@type": "Periodical", name: "Психоанализ за неделю", inLanguage: "ru",
+      url: env.PUBLIC_URL + "/", description: "Еженедельный обзор: исследования, новые статьи психоаналитических журналов, подкасты, новости сообщества и культура." },
+    description: "Всё, что за неделю вышло о психоанализе: исследования, новые статьи журналов, подкасты и видео, новости сообщества и культура — с пересказами по-русски.",
     body, env,
   });
 }
 
 export function renderIssue(issue, { prev, next }, env) {
+  B = env.BASE || "";
   const secs = sorted(issue.sections);
   const n = countItems(issue);
   const uids = new Map(flat(issue).map((x) => [x.it, x.uid]));
@@ -378,7 +394,7 @@ export function renderIssue(issue, { prev, next }, env) {
 ${issue.status === "draft" ? `<div class="draft">Черновик — ещё не опубликован в канале</div>` : ""}
 <div class="wrap">
 <header class="ihead">
-<a class="back" href="/">← Все выпуски и материалы</a>
+<a class="back" href="${B}/">← Все выпуски и материалы</a>
 <div class="over">Выпуск № ${issue.number} · ${esc(period(issue.period_from, issue.period_to))}</div>
 <h1>${esc(issue.title)}</h1>
 ${issue.lead ? `<p class="lead">${esc(issue.lead)}</p>` : ""}
@@ -392,21 +408,33 @@ ${s.items.map((it) => itemHtml(it, s.key, issue, uids.get(it), false)).join("")}
 </section>`).join("")}
 </div>
 ${prev || next ? `<nav class="inav">
-${prev ? `<a href="/issue/${esc(prev.id)}"><div class="over">← Предыдущий</div><div class="t">${esc(prev.title)}</div></a>` : ""}
-${next ? `<a class="r" href="/issue/${esc(next.id)}"><div class="over">Следующий →</div><div class="t">${esc(next.title)}</div></a>` : ""}
+${prev ? `<a href="${issueHref(prev.id)}"><div class="over">← Предыдущий</div><div class="t">${esc(prev.title)}</div></a>` : ""}
+${next ? `<a class="r" href="${issueHref(next.id)}"><div class="over">Следующий →</div><div class="t">${esc(next.title)}</div></a>` : ""}
 </nav>` : `<div style="height:60px"></div>`}
 </div>`;
   return layout({
     title: `№ ${issue.number}. ${issue.title} — Психоанализ за неделю`,
     description: issue.lead || `${plural(n, "материал", "материала", "материалов")} за ${period(issue.period_from, issue.period_to)}`,
-    body, env, path: `/issue/${issue.id}`, image: issue.cover,
+    body, env, path: `/issue/${issue.id}/`, image: issue.cover, noindex: issue.status !== "published",
+    ld: {
+      "@context": "https://schema.org", "@type": "PublicationIssue", issueNumber: issue.number,
+      name: issue.title, description: issue.lead, inLanguage: "ru",
+      datePublished: (issue.published_at || issue.created_at || "").slice(0, 10) || undefined,
+      url: env.PUBLIC_URL + `/issue/${issue.id}/`, image: issue.cover || undefined,
+      isPartOf: { "@type": "Periodical", name: "Психоанализ за неделю", url: env.PUBLIC_URL + "/",
+        publisher: { "@type": "Organization", name: "Что-то на психоаналитическом", url: `https://t.me/${env.CHANNEL.replace(/^@/, "")}` } },
+      hasPart: flat(issue).filter((x) => x.key !== "journals").map(({ it }) => ({
+        "@type": "CreativeWork", name: it.title, alternateName: it.original,
+        url: /^https?:\/\//i.test(it.url || "") ? it.url : undefined, abstract: it.summary })),
+    },
   });
 }
 
 export function renderNotFound(env) {
+  B = env.BASE || "";
   return layout({
-    title: "Не найдено — Психоанализ за неделю", description: "", env,
+    title: "Не найдено — Психоанализ за неделю", description: "", env, noindex: true,
     body: `<section class="wrap mast"><div class="over">404</div><h1>Такой страницы <em>нет</em></h1>
-<p><a href="/">Вернуться к выпускам</a></p></section>`,
+<p><a href="${B}/">Вернуться к выпускам</a></p></section>`,
   });
 }

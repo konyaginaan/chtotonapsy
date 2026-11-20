@@ -11,10 +11,15 @@
  * Бот общий с каналом @vokruhkipra (@vokrugkipra_bot). Вебхук подписан только
  * на callback_query, чтобы не мешать: кипрские скрипты лишь отправляют посты.
  *
+ * Постоянный адрес журнала — GitHub Pages (PUBLIC_URL): после публикации воркер просит GitHub
+ * пересобрать сайт, а сборка забирает готовые страницы из /api/export. Страницы на самом воркере
+ * закрыты от индексации и нужны для черновиков.
+ *
  * Секреты (wrangler secret put):
  *   BOT_TOKEN       — токен бота;
  *   DRAFT_KEY       — ключ задачи на маке (заголовок Authorization: Bearer …);
- *   WEBHOOK_SECRET  — подтверждает, что вебхук дёрнул Telegram.
+ *   WEBHOOK_SECRET  — подтверждает, что вебхук дёрнул Telegram;
+ *   GITHUB_TOKEN    — токен с доступом к репозиторию журнала, чтобы запустить пересборку.
  */
 
 import { renderIndex, renderIssue, renderNotFound, SECTIONS } from "./render.js";
@@ -47,10 +52,11 @@ export default {
       if (c && c[1] && request.method === "PUT") return await putCover(request, env, c[2]);
       if (c && !c[1]) return await getCover(env, c[2]);
       if (p === "/setup") return await setup(env, url);
-      if (p === "/") return html(renderIndex(await publishedIssues(env), env));
+      if (p === "/api/export") return json(await exportSite(env));
+      if (p === "/") return html(renderIndex(await publishedIssues(env), onWorker(env)));
       const m = p.match(/^\/issue\/(\d{4}-\d{2}-\d{2})\/?$/);
       if (m) return await issuePage(env, m[1]);
-      return html(renderNotFound(env), 404);
+      return html(renderNotFound(onWorker(env)), 404);
     } catch (e) {
       console.error("unhandled", e && (e.stack || e.message));
       return json({ error: "internal" }, 500);
@@ -75,7 +81,10 @@ async function tg(env, method, body) {
   return data;
 }
 
-const issueUrl = (env, id) => `${env.SITE_URL}/issue/${id}`;
+const issueUrl = (env, id) => `${env.SITE_URL}/issue/${id}`;          // на воркере (черновик)
+const publicUrl = (env, id) => `${env.PUBLIC_URL}/issue/${id}/`;     // на GitHub Pages
+const onWorker = (env) => ({ ...env, BASE: "", NOINDEX: true });
+const onPages = (env) => ({ ...env, BASE: new URL(env.PUBLIC_URL).pathname.replace(/\/$/, ""), NOINDEX: false });
 
 // Ссылка на обложку с версией: Telegram кэширует превью по адресу, новая версия — новый адрес.
 async function coverUrl(env, id) {
@@ -133,9 +142,10 @@ async function publishedIssues(env) {
   return results.map(rowToIssue);
 }
 
-async function issuePage(env, id) {
+// Выпуск с номером и соседями — для страницы на воркере и для экспорта на Pages.
+async function loadIssue(env, id) {
   const row = await env.DB.prepare("SELECT * FROM issues WHERE id = ?").bind(id).first();
-  if (!row || row.status === "rejected") return html(renderNotFound(env), 404);
+  if (!row || row.status === "rejected") return null;
   const issue = rowToIssue(row);
   // Номер выпуска — порядковый среди опубликованных; у черновика — следующий.
   const { n } = await env.DB.prepare(
@@ -148,10 +158,53 @@ async function issuePage(env, id) {
   const next = await env.DB.prepare(
     "SELECT id, title FROM issues WHERE status = 'published' AND id > ? ORDER BY id ASC LIMIT 1"
   ).bind(id).first();
-  issue.cover = await coverUrl(env, id);
-  const res = html(renderIssue(issue, { prev, next }, env));
-  if (issue.status === "draft") res.headers.set("Cache-Control", "no-store");
+  return { issue, prev, next };
+}
+
+async function issuePage(env, id) {
+  const x = await loadIssue(env, id);
+  if (!x) return html(renderNotFound(onWorker(env)), 404);
+  x.issue.cover = await coverUrl(env, id);
+  const res = html(renderIssue(x.issue, x, onWorker(env)));
+  if (x.issue.status === "draft") res.headers.set("Cache-Control", "no-store");
   return res;
+}
+
+// Всё для статической копии на GitHub Pages: готовые страницы и адреса обложек.
+async function exportSite(env) {
+  const v = onPages(env);
+  const issues = await publishedIssues(env);
+  const files = { "index.html": renderIndex(issues, v), "404.html": renderNotFound(v) };
+  const covers = {};
+  for (const { id } of issues) {
+    const x = await loadIssue(env, id);
+    const cover = await coverUrl(env, id);
+    if (cover) {
+      covers[`cover/${id}.jpg`] = cover;
+      x.issue.cover = `${env.PUBLIC_URL}/cover/${id}.jpg`;
+    }
+    files[`issue/${id}/index.html`] = renderIssue(x.issue, x, v);
+  }
+  const urls = [`${env.PUBLIC_URL}/`, ...issues.map((is) => publicUrl(env, is.id))];
+  files["sitemap.xml"] = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls.map((u, i) => `<url><loc>${u}</loc>${i ? `<lastmod>${(issues[i - 1].published_at || "").slice(0, 10)}</lastmod>` : ""}</url>`).join("\n")}
+</urlset>
+`;
+  files["robots.txt"] = `User-agent: *\nAllow: /\n\nSitemap: ${env.PUBLIC_URL}/sitemap.xml\n`;
+  return { files, covers };
+}
+
+// Попросить GitHub пересобрать журнал. Без токена — молча пропускаем: сборка всё равно идёт раз в час.
+async function rebuildPages(env) {
+  if (!env.GITHUB_TOKEN) return;
+  const r = await fetch(`https://api.github.com/repos/${env.GITHUB_REPO}/dispatches`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${env.GITHUB_TOKEN}`, Accept: "application/vnd.github+json",
+      "User-Agent": "chtotonapsy-worker", "Content-Type": "application/json" },
+    body: JSON.stringify({ event_type: "publish" }),
+  });
+  if (!r.ok) console.error("github dispatch", r.status, await r.text());
 }
 
 async function latest(env) {
@@ -269,12 +322,14 @@ async function webhook(request, env) {
     "UPDATE issues SET status = 'published', published_at = ? WHERE id = ? AND status = 'draft'"
   ).bind(new Date().toISOString(), id).run();
   if (!lock.meta.changes) { await answer("Уже публикуется"); return new Response("ok"); }
+  // Сразу запускаем сборку журнала: пока пост дойдёт до читателей, страница уже будет на месте.
+  await rebuildPages(env);
 
   const sent = await tg(env, "sendMessage", {
     chat_id: env.CHANNEL,
     text: row.post,
     parse_mode: "HTML",
-    link_preview_options: await previewOptions(env, id, issueUrl(env, id)),
+    link_preview_options: await previewOptions(env, id, publicUrl(env, id)),
   });
   if (!sent.ok) {
     await env.DB.prepare("UPDATE issues SET status = 'draft', published_at = NULL WHERE id = ?").bind(id).run();
