@@ -1,7 +1,7 @@
 # Обзор психоанализа для @chtotonapsy
 
 Еженедельный обзор для канала «Что-то на психоаналитическом» (психоаналитики и психологи; время событий — по Москве).
-Воркер + D1 `chtotonapsy`, журнал: https://chtotonapsy.norevia.workers.dev (`/` — выпуски и поиск, `/issue/<пятница>`).
+Журнал для читателей: **https://konyaginaan.github.io/chtotonapsy/** (репозиторий konyaginaan/chtotonapsy, Pages через Actions: `tools/build_pages.py` берёт готовые страницы из `/api/export` воркера). Воркер https://chtotonapsy.norevia.workers.dev + D1 `chtotonapsy` — «мотор»: бот, кнопки, хранение, черновики; его страницы noindex. После «Опубликовать» воркер шлёт repository_dispatch (секрет GITHUB_TOKEN), страховка — сборка раз в час. Карта сайта, robots, canonical, JSON-LD; коды Google/Яндекса — vars GOOGLE_VERIFY/YANDEX_VERIFY в wrangler.jsonc.
 
 - Выпуски — `issues/ГГГГ-ММ-ДД.json`, черновик отправляется `tools/send-draft.sh` (ключ в `~/.config/chtotonapsy/draft_key`).
 - Пост средней длины, остальное — в журнале. Черновик приходит владелице в личку с кнопкой «Опубликовать»; самому в канал не публиковать.
