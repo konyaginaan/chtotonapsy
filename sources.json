@@ -1,5 +1,5 @@
 {
-  "_": "Источники, которые tools/collect.py проходит каждую неделю. Журналы — по ISSN через Crossref (новые DOI за период), подкасты — RSS, YouTube — RSS канала. Добавлять сюда; проверено 20.11.2026.",
+  "_": "Источники, которые tools/collect.py проходит каждую неделю. Журналы — по ISSN через Crossref (новые DOI за период), подкасты — RSS, YouTube — RSS канала. Добавлять сюда; проверено 20.11.2026. Журналы с filter: true — смежные (антропология, сознание): из них берутся только статьи, связанные с психоанализом, бессознательным, психодинамикой, травмой, субъективностью.",
   "journals": [
     {
       "name": "The International Journal of Psychoanalysis",
@@ -128,6 +128,31 @@
     {
       "name": "Консультативная психология и психотерапия",
       "issn": "2075-3470",
+      "filter": true
+    },
+    {
+      "name": "Ethos (психологическая антропология)",
+      "issn": "0091-2131",
+      "filter": true
+    },
+    {
+      "name": "Culture, Medicine and Psychiatry",
+      "issn": "0165-005X",
+      "filter": true
+    },
+    {
+      "name": "Transcultural Psychiatry",
+      "issn": "1363-4615",
+      "filter": true
+    },
+    {
+      "name": "Anthropology of Consciousness",
+      "issn": "1053-4202",
+      "filter": true
+    },
+    {
+      "name": "Journal of Consciousness Studies",
+      "issn": "1355-8250",
       "filter": true
     }
   ],
