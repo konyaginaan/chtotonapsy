@@ -42,6 +42,10 @@ export default {
       if (p === "/webhook" && request.method === "POST") return await webhook(request, env);
       if (p === "/api/draft" && request.method === "POST") return await postDraft(request, env);
       if (p === "/api/latest") return await latest(env);
+      if (p === "/api/preview" && request.method === "POST") return await preview(request, env);
+      const c = p.match(/^\/(api\/)?cover\/(\d{4}-\d{2}-\d{2})(\.jpg)?$/);
+      if (c && c[1] && request.method === "PUT") return await putCover(request, env, c[2]);
+      if (c && !c[1]) return await getCover(env, c[2]);
       if (p === "/setup") return await setup(env, url);
       if (p === "/") return html(renderIndex(await publishedIssues(env), env));
       const m = p.match(/^\/issue\/(\d{4}-\d{2}-\d{2})\/?$/);
@@ -73,6 +77,49 @@ async function tg(env, method, body) {
 
 const issueUrl = (env, id) => `${env.SITE_URL}/issue/${id}`;
 
+// Ссылка на обложку с версией: Telegram кэширует превью по адресу, новая версия — новый адрес.
+async function coverUrl(env, id) {
+  const r = await env.DB.prepare("SELECT version FROM covers WHERE id = ?").bind(id).first();
+  return r ? `${env.SITE_URL}/cover/${id}.jpg?v=${r.version}` : null;
+}
+
+// Обложка — большой картинкой над текстом; без неё превью страницы выпуска.
+async function previewOptions(env, id, fallbackUrl) {
+  const cover = await coverUrl(env, id);
+  if (cover) return { url: cover, show_above_text: true, prefer_large_media: true };
+  return fallbackUrl ? { url: fallbackUrl, prefer_small_media: true } : { is_disabled: true };
+}
+
+async function putCover(request, env, id) {
+  if (!authorized(request, env)) return json({ error: "unauthorized" }, 401);
+  const img = await request.arrayBuffer();
+  if (!img.byteLength || img.byteLength > 1_500_000) return json({ error: "размер обложки 1 байт – 1,5 МБ" }, 400);
+  const version = Date.now().toString(36);
+  await env.DB.prepare(
+    "INSERT INTO covers (id, img, version) VALUES (?1, ?2, ?3) ON CONFLICT(id) DO UPDATE SET img = ?2, version = ?3"
+  ).bind(id, img, version).run();
+  return json({ ok: true, url: await coverUrl(env, id) });
+}
+
+async function getCover(env, id) {
+  const r = await env.DB.prepare("SELECT img FROM covers WHERE id = ?").bind(id).first();
+  if (!r) return new Response("not found", { status: 404 });
+  return new Response(new Uint8Array(r.img), {
+    headers: { "Content-Type": "image/jpeg", "Cache-Control": "public, max-age=31536000, immutable" },
+  });
+}
+
+// Пробная отправка поста владельцу — без кнопок, чтобы сравнить варианты оформления.
+async function preview(request, env) {
+  if (!authorized(request, env)) return json({ error: "unauthorized" }, 401);
+  const d = await request.json();
+  const sent = await tg(env, "sendMessage", {
+    chat_id: env.OWNER_ID, text: d.post, parse_mode: "HTML",
+    link_preview_options: d.id ? await previewOptions(env, d.id) : { is_disabled: true },
+  });
+  return sent.ok ? json({ ok: true }) : json({ error: "telegram", details: sent.description }, 502);
+}
+
 // ---------- Данные ----------
 
 function rowToIssue(r) {
@@ -101,6 +148,7 @@ async function issuePage(env, id) {
   const next = await env.DB.prepare(
     "SELECT id, title FROM issues WHERE status = 'published' AND id > ? ORDER BY id ASC LIMIT 1"
   ).bind(id).first();
+  issue.cover = await coverUrl(env, id);
   const res = html(renderIssue(issue, { prev, next }, env));
   if (issue.status === "draft") res.headers.set("Cache-Control", "no-store");
   return res;
@@ -167,7 +215,7 @@ async function postDraft(request, env) {
     chat_id: env.OWNER_ID,
     text: d.post,
     parse_mode: "HTML",
-    link_preview_options: { is_disabled: true },
+    link_preview_options: await previewOptions(env, d.id),
     reply_markup: { inline_keyboard: [
       [{ text: "✅ Опубликовать", callback_data: `pub:${d.id}` }],
       [{ text: "📖 Страница выпуска", url: issueUrl(env, d.id) }],
@@ -226,7 +274,7 @@ async function webhook(request, env) {
     chat_id: env.CHANNEL,
     text: row.post,
     parse_mode: "HTML",
-    link_preview_options: { url: issueUrl(env, id), prefer_small_media: true },
+    link_preview_options: await previewOptions(env, id, issueUrl(env, id)),
   });
   if (!sent.ok) {
     await env.DB.prepare("UPDATE issues SET status = 'draft', published_at = NULL WHERE id = ?").bind(id).run();

@@ -182,7 +182,7 @@ aside .sticky{position:sticky;top:24px}
 }
 `;
 
-function layout({ title, description, body, env, path = "/" }) {
+function layout({ title, description, body, env, path = "/", image }) {
   const ch = env.CHANNEL.replace(/^@/, "");
   return `<!doctype html><html lang="ru"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -191,6 +191,7 @@ function layout({ title, description, body, env, path = "/" }) {
 <meta property="og:type" content="website"><meta property="og:site_name" content="Что-то на психоаналитическом">
 <meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(description)}">
 <meta property="og:url" content="${esc(env.SITE_URL + path)}">
+${image ? `<meta property="og:image" content="${esc(image)}"><meta name="twitter:card" content="summary_large_image">` : ""}
 <meta name="color-scheme" content="light dark">
 <link rel="icon" href="data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="#7b3a63"/><text x="16" y="23" font-family="Georgia,serif" font-size="20" font-style="italic" text-anchor="middle" fill="#fff">ψ</text></svg>')}">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -323,7 +324,7 @@ ${next ? `<a class="r" href="/issue/${esc(next.id)}"><div class="over">След�
   return layout({
     title: `№ ${issue.number}. ${issue.title} — Психоанализ за неделю`,
     description: issue.lead || `${plural(n, "материал", "материала", "материалов")} за ${period(issue.period_from, issue.period_to)}`,
-    body, env, path: `/issue/${issue.id}`,
+    body, env, path: `/issue/${issue.id}`, image: issue.cover,
   });
 }
 
