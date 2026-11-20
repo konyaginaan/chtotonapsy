@@ -3,6 +3,8 @@
   "name": "chtotonapsy",
   "main": "worker/index.js",
   "compatibility_date": "2026-09-01",
+  // Картинки оформления (public/assets); всё остальное обрабатывает код.
+  "assets": { "directory": "./public", "binding": "ASSETS" },
   "vars": {
     // Нужен расписанию и подписям к постам: у cron нет запроса, из которого виден адрес.
     "SITE_URL": "https://chtotonapsy.norevia.workers.dev",

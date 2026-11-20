@@ -6,7 +6,7 @@
 Воркер отдаёт готовые страницы (с префиксом /chtotonapsy в ссылках) и адреса обложек;
 здесь они только раскладываются по папкам.
 """
-import json, sys, urllib.request
+import json, shutil, sys, urllib.request
 from pathlib import Path
 
 API = "https://chtotonapsy.norevia.workers.dev/api/export"
@@ -29,6 +29,8 @@ def main():
         f = out / path
         f.parent.mkdir(parents=True, exist_ok=True)
         f.write_bytes(fetch(url))
+    # картинки оформления лежат в репозитории
+    shutil.copytree(Path(__file__).resolve().parent.parent / "public", out, dirs_exist_ok=True)
     (out / ".nojekyll").write_text("")
     print(f"{len(data['files'])} страниц, {len(data['covers'])} обложек → {out}")
 

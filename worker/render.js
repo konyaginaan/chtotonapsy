@@ -51,155 +51,187 @@ const flat = (issue) => {
   return sorted(issue.sections).flatMap((s) => s.items.map((it) => ({ it, key: s.key, uid: `${issue.id}-${++n}` })));
 };
 
-const FONTS = "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=Manrope:wght@500;600;700&display=swap";
+const FONTS = "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=Manrope:wght@500;600;700&family=Unbounded:wght@500;600&display=swap";
 
 const CSS = `
 :root{
-  --bg:#f6f2f4; --paper:#fffdfb; --ink:#241c29; --muted:#6e6476; --faint:#9a90a2;
-  --rule:#e4d9e2; --accent:#7b3a63; --accent-ink:#5f2a4b; --soft:#f1e5ee; --mark:#efd9e8;
-  --science:#4f5fa8; --journals:#8a6a1f; --community:#7b3a63; --ru:#a2573a; --media:#b0485c; --culture:#3f7f6e;
-  --shadow:0 1px 2px rgba(60,30,60,.05),0 8px 28px rgba(60,30,60,.06);
+  --bg:#fcf5ec; --paper:#fffaf4; --ink:#26122e; --muted:#6d5a72; --faint:#a08fa4;
+  --rule:#eedfd2; --accent:#c2367a; --accent-ink:#9c2361; --soft:#f9e8ea; --mark:#ffd9a8;
+  --gold:#c9a24a; --plum:#2a0f33;
+  --grad:linear-gradient(100deg,#f59e2c 0%,#ec4f8a 36%,#9b5de5 68%,#1fa5a0 100%);
+  --science:#2c7fb8; --journals:#c9790a; --community:#c2367a; --ru:#d9502b; --media:#7c4dd6; --culture:#13998a;
+  --shadow:0 1px 2px rgba(70,20,60,.05),0 14px 40px rgba(70,20,60,.08);
 }
 @media (prefers-color-scheme:dark){:root{
-  --bg:#141117; --paper:#1c171f; --ink:#eee7f0; --muted:#b0a5b6; --faint:#857a8c;
-  --rule:#33293a; --accent:#e0a3c8; --accent-ink:#f0c2dd; --soft:#2a2030; --mark:#3a2840;
-  --science:#9eaaf0; --journals:#e2c67c; --community:#e0a3c8; --ru:#eaa688; --media:#f2a3b1; --culture:#86cbb6;
-  --shadow:none;
+  --bg:#150a1b; --paper:#20112a; --ink:#f8ecf2; --muted:#c3aecb; --faint:#8d7896;
+  --rule:#3a2445; --accent:#ff7ab6; --accent-ink:#ffa3cc; --soft:#2e1838; --mark:#5a2a52;
+  --science:#7cc0ff; --journals:#ffc35c; --community:#ff7ab6; --ru:#ff9a73; --media:#b89aff; --culture:#5fe0cc;
+  --shadow:0 14px 40px rgba(0,0,0,.35);
 }}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.65 Literata,Georgia,serif;
-  font-optical-sizing:auto}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.65 Literata,Georgia,serif;font-optical-sizing:auto}
 a{color:inherit}
-.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
-.sans{font-family:Manrope,system-ui,sans-serif}
-.over{font:700 12px/1.3 Manrope,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+img{display:block;max-width:100%}
+.wrap{max-width:1160px;margin:0 auto;padding:0 24px}
+.over{font:600 11.5px/1.3 Unbounded,Manrope,system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
 .muted{color:var(--muted)}
-h1,h2,h3{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;line-height:1.08;margin:0;letter-spacing:-.005em}
+h1,h2,h3{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;line-height:1.06;margin:0;letter-spacing:-.005em}
+.gt{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 
 /* шапка */
-.top{border-bottom:1px solid var(--rule)}
-.top .wrap{display:flex;justify-content:space-between;align-items:center;gap:12px;height:56px}
-.brand{font:600 20px/1 "Cormorant Garamond",Georgia,serif;text-decoration:none}
-.brand i{color:var(--accent);font-style:italic}
-.tg{font:600 13px/1 Manrope,system-ui,sans-serif;text-decoration:none;color:var(--accent);
-  border:1px solid var(--rule);padding:9px 14px;border-radius:99px;white-space:nowrap}
-.tg:hover{background:var(--soft)}
+.top{position:relative;z-index:5}
+.top .wrap{display:flex;justify-content:space-between;align-items:center;gap:12px;height:68px}
+.brand{display:flex;align-items:center;gap:10px;font:600 21px/1 "Cormorant Garamond",Georgia,serif;text-decoration:none}
+.brand .psi{width:34px;height:34px;border-radius:50%;background:var(--grad);display:grid;place-items:center;
+  color:#fff;font:italic 600 21px/1 "Cormorant Garamond",serif;box-shadow:0 0 0 2px rgba(255,255,255,.5) inset}
+.brand i{font-style:italic}
+.tg{font:600 12.5px/1 Unbounded,Manrope,sans-serif;letter-spacing:.02em;text-decoration:none;
+  padding:11px 16px;border-radius:99px;white-space:nowrap;border:1px solid var(--rule);background:var(--paper)}
+.tg:hover{border-color:var(--accent);color:var(--accent)}
+.on-hero .top{position:absolute;left:0;right:0;top:0;color:#fff7ee}
+.on-hero .top .tg{background:rgba(42,15,51,.35);border-color:rgba(255,230,200,.4);color:#fff7ee;backdrop-filter:blur(8px)}
 
-.mast{padding:64px 0 40px;text-align:center}
-.mast h1{font-size:clamp(46px,8vw,84px);font-weight:500}
-.mast h1 em{color:var(--accent)}
-.mast p{max-width:560px;margin:18px auto 0;color:var(--muted);font-size:17px}
-.orn{display:flex;align-items:center;gap:14px;justify-content:center;color:var(--faint);margin-top:28px}
-.orn:before,.orn:after{content:"";height:1px;width:64px;background:var(--rule)}
+/* главная: обложка */
+.hero{position:relative;min-height:min(92vh,780px);color:#fff7ee;display:flex;align-items:center;overflow:hidden;
+  background:#2a0f33 image-set(url("{{B}}/assets/hero.webp") 1x) center 30%/cover no-repeat}
+.hero:before{content:"";position:absolute;inset:0;
+  background:linear-gradient(90deg,rgba(34,8,42,.9) 0%,rgba(42,12,52,.7) 34%,rgba(42,12,52,.15) 62%,rgba(42,12,52,0) 80%),
+             linear-gradient(0deg,rgba(34,8,42,.55),rgba(34,8,42,0) 30%)}
+.hero .wrap{position:relative;width:100%;padding-top:110px;padding-bottom:150px}
+.hero .over{color:#ffd38a}
+.hero h1{font-size:clamp(54px,9vw,118px);font-weight:500;line-height:.95;margin:18px 0 22px;max-width:640px;text-shadow:0 4px 40px rgba(20,0,30,.5)}
+.hero h1 em{font-style:italic;background:linear-gradient(100deg,#ffc061,#ff7ab6 50%,#c8a6ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{max-width:520px;font-size:18.5px;line-height:1.6;color:#fbe9df;margin:0}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+.btn{font:600 13.5px/1 Unbounded,Manrope,sans-serif;letter-spacing:.02em;text-decoration:none;padding:17px 24px;border-radius:99px;
+  background:var(--grad);color:#fff;box-shadow:0 10px 30px rgba(236,79,138,.35);white-space:nowrap;transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(236,79,138,.45)}
+.btn.ghost{background:rgba(255,247,238,.12);box-shadow:none;border:1px solid rgba(255,230,200,.45);backdrop-filter:blur(8px)}
+.waves{position:absolute;left:0;right:0;bottom:-1px;width:100%;height:120px;display:block}
 
 /* свежий выпуск */
-.feat{background:var(--paper);border:1px solid var(--rule);border-radius:18px;box-shadow:var(--shadow);
-  padding:clamp(24px,5vw,48px);display:grid;grid-template-columns:1fr auto;gap:28px;align-items:end}
-.feat h2{font-size:clamp(32px,5vw,50px);margin:12px 0 14px}
+.feat{position:relative;margin-top:-30px;z-index:2;background:var(--paper);border-radius:28px;box-shadow:var(--shadow);
+  display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);overflow:hidden;border:1px solid var(--rule)}
+.feat .cv{display:flex;align-items:center;background:var(--plum) url("{{B}}/assets/cover-bg-900.webp") center/cover}
+.feat .cv img{width:100%;height:auto;aspect-ratio:16/9;box-shadow:0 20px 50px rgba(20,0,30,.45)}
+.feat .tx{padding:clamp(24px,4vw,44px);display:flex;flex-direction:column;justify-content:center}
+.feat h2{font-size:clamp(32px,4vw,48px);margin:12px 0 14px}
 .feat h2 a{text-decoration:none}
 .feat h2 a:hover{color:var(--accent)}
-.feat .lead{font-size:18px;color:var(--muted);margin:0;max-width:680px}
+.feat .lead{font-size:16.5px;color:var(--muted);margin:0}
+.feat .btn{align-self:flex-start;margin-top:24px}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
-.chip{font:600 12.5px/1 Manrope,system-ui,sans-serif;padding:8px 12px;border-radius:99px;background:var(--soft);
-  color:var(--ink);border:1px solid transparent;display:inline-flex;align-items:center;gap:7px;text-decoration:none}
+.chip{font:600 12.5px/1 Manrope,system-ui,sans-serif;padding:6px 13px 6px 6px;border-radius:99px;background:var(--soft);
+  color:var(--ink);border:1px solid transparent;display:inline-flex;align-items:center;gap:8px;text-decoration:none;transition:border-color .2s}
+.chip:hover{border-color:var(--c,var(--accent))}
+.em{width:24px;height:24px;border-radius:50%;flex:none;object-fit:cover;box-shadow:0 0 0 1.5px var(--gold)}
 .dot{width:7px;height:7px;border-radius:50%;background:var(--c,var(--accent));flex:none}
-.btn{font:700 14px/1 Manrope,system-ui,sans-serif;background:var(--accent);color:var(--paper);text-decoration:none;
-  padding:16px 22px;border-radius:12px;white-space:nowrap}
-.btn:hover{background:var(--accent-ink)}
 
 /* сетка: материалы + выпуски */
-.grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:56px;margin:64px 0 80px}
-.h-sec{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
-  border-bottom:2px solid var(--ink);padding-bottom:10px;margin-bottom:6px}
-.h-sec h2{font-size:32px}
-.tools{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 8px}
-.search{flex:1 1 220px;font:500 15px/1 Manrope,system-ui,sans-serif;color:var(--ink);background:var(--paper);
-  border:1px solid var(--rule);border-radius:10px;padding:12px 14px;min-width:0}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:56px;margin:80px auto 90px}
+.h-sec{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding-bottom:12px;margin-bottom:6px;position:relative}
+.h-sec:after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;border-radius:3px;background:var(--grad)}
+.h-sec h2{font-size:38px}
+.tools{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 8px}
+.search{flex:1 1 240px;font:500 15px/1 Manrope,system-ui,sans-serif;color:var(--ink);background:var(--paper);
+  border:1px solid var(--rule);border-radius:99px;padding:13px 18px;min-width:0}
 .search:focus{outline:2px solid var(--accent);outline-offset:1px}
 .filter{cursor:pointer}
 .filter[aria-pressed=true]{background:var(--ink);color:var(--bg)}
-.filter[aria-pressed=true] .dot{background:var(--bg)}
 
-.item{padding:24px 0;border-bottom:1px solid var(--rule)}
-.meta{font:600 12px/1.5 Manrope,system-ui,sans-serif;color:var(--muted);letter-spacing:.02em;
-  display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center}
-.meta .kind{color:var(--c);text-transform:uppercase;letter-spacing:.1em;display:inline-flex;gap:6px;align-items:center}
-.item h3{font-size:25px;margin:8px 0 6px;font-weight:600}
+.item{padding:26px 0;border-bottom:1px solid var(--rule)}
+.meta{font:600 12px/1.5 Manrope,system-ui,sans-serif;color:var(--muted);letter-spacing:.02em;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center}
+.meta .kind{color:var(--c);text-transform:uppercase;letter-spacing:.12em;display:inline-flex;gap:6px;align-items:center;font-family:Unbounded,Manrope,sans-serif;font-size:10.5px;font-weight:600}
+.item h3{font-size:27px;margin:9px 0 6px;font-weight:600}
 .item h3 a{text-decoration:none;background-image:linear-gradient(var(--mark),var(--mark));
-  background-size:0 40%;background-position:0 88%;background-repeat:no-repeat;transition:background-size .25s}
-.item h3 a:hover{background-size:100% 40%}
-.ext{font:400 .7em/1 Manrope,sans-serif;color:var(--faint);margin-left:4px}
-.authors{font-style:italic;color:var(--muted);font-size:15px;margin:0 0 6px}
+  background-size:0 38%;background-position:0 88%;background-repeat:no-repeat;transition:background-size .3s}
+.item h3 a:hover{background-size:100% 38%}
+.ext{font:400 .62em/1 Manrope,sans-serif;color:var(--faint);margin-left:5px}
+.authors{font-style:italic;color:var(--muted);font-size:15px;margin:0 0 7px}
 .item p.sum{margin:0;font-size:16.5px}
-.arts{list-style:none;margin:12px 0 0;padding:0;border-left:2px solid var(--rule);font-size:15.5px}
-.arts li{padding:7px 0 7px 16px;line-height:1.45}
+.arts{list-style:none;margin:14px 0 0;padding:4px 0 4px 18px;border-left:3px solid var(--c);font-size:15.5px;border-radius:2px}
+.arts li{padding:7px 0;line-height:1.45}
 .arts a{text-decoration:none;font-weight:600}
 .arts a:hover{color:var(--accent)}
 .arts .o{display:block;font-size:13.5px;color:var(--muted);font-style:italic}
-.flag{font:700 10.5px/1 Manrope,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.08em;
-  border:1px solid currentColor;border-radius:4px;padding:3px 5px;color:var(--culture)}
-.from{font:600 12.5px/1 Manrope,system-ui,sans-serif;color:var(--faint);margin-top:10px;display:inline-block;text-decoration:none}
+.flag{font:700 10px/1 Manrope,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.08em;border-radius:99px;padding:4px 8px;
+  color:#fff;background:var(--culture)}
+.from{font:600 12.5px/1 Manrope,system-ui,sans-serif;color:var(--faint);margin-top:12px;display:inline-block;text-decoration:none}
 .from:hover{color:var(--accent)}
 .empty{padding:40px 0;color:var(--muted);font-style:italic}
 
 .issues{list-style:none;margin:18px 0 0;padding:0}
 .issues li{border-bottom:1px solid var(--rule)}
-.issues a{display:block;padding:16px 0;text-decoration:none}
-.issues .n{font:700 12px/1 Manrope,system-ui,sans-serif;color:var(--accent);letter-spacing:.06em}
-.issues .t{font:600 21px/1.15 "Cormorant Garamond",Georgia,serif;margin-top:6px}
+.issues a{display:grid;grid-template-columns:92px 1fr;gap:14px;align-items:center;padding:14px 0;text-decoration:none}
+.issues img{width:92px;aspect-ratio:16/9;object-fit:cover;border-radius:10px;background:var(--plum)}
+.issues .n{font:600 11px/1 Unbounded,Manrope,sans-serif;color:var(--accent);letter-spacing:.06em}
+.issues .t{font:600 20px/1.12 "Cormorant Garamond",Georgia,serif;margin-top:5px}
 .issues a:hover .t{color:var(--accent)}
-.issues .d{font:500 12.5px/1 Manrope,system-ui,sans-serif;color:var(--faint);margin-top:6px}
+.issues .d{font:500 12px/1.3 Manrope,system-ui,sans-serif;color:var(--faint);margin-top:5px}
 aside .sticky{position:sticky;top:24px}
-.about{margin-top:32px;padding:22px;border-radius:14px;background:var(--soft);font-size:15px;color:var(--muted)}
+.about{margin-top:32px;padding:24px;border-radius:20px;font-size:15px;color:var(--muted);position:relative;overflow:hidden;
+  background:linear-gradient(var(--paper),var(--paper)) padding-box,var(--grad) border-box;border:2px solid transparent}
 .about b{color:var(--ink);font-weight:600}
+.about .ems{display:flex;margin-bottom:14px}
+.about .ems img{width:34px;height:34px;border-radius:50%;margin-right:-8px;box-shadow:0 0 0 2px var(--paper)}
 
 /* страница выпуска */
-.draft{background:#f5d48a;color:#3b2a00;font:700 13px/1.4 Manrope,system-ui,sans-serif;text-align:center;padding:10px 16px}
-.ihead{max-width:760px;margin:0 auto;padding:56px 0 8px;text-align:center}
-.back{font:600 13px/1 Manrope,system-ui,sans-serif;color:var(--muted);text-decoration:none}
-.back:hover{color:var(--accent)}
-.ihead .over{margin-top:36px}
-.ihead h1{font-size:clamp(40px,7vw,68px);margin:14px 0 22px;font-weight:500}
-.ihead .lead{font:italic 400 20px/1.6 Literata,Georgia,serif;color:var(--muted);margin:0}
-.toc{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:32px 0 0}
-.body{max-width:760px;margin:0 auto 40px}
-.sec{margin-top:64px;scroll-margin-top:20px}
-.sec-h{display:flex;align-items:center;gap:14px;margin-bottom:4px}
-.sec-h h2{font-size:36px}
-.sec-h .rule{flex:1;height:1px;background:var(--rule)}
-.sec-h .cnt{font:700 12px/1 Manrope,system-ui,sans-serif;color:var(--faint)}
-.sec-mark{width:12px;height:12px;border-radius:3px;background:var(--c);transform:rotate(45deg);flex:none}
-.inav{max-width:760px;margin:24px auto 80px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.inav a{display:block;padding:20px;border:1px solid var(--rule);border-radius:14px;text-decoration:none;background:var(--paper)}
+.draft{position:fixed;left:0;right:0;bottom:0;z-index:20;background:#ffd38a;color:#3b2a00;font:700 13px/1.4 Manrope,system-ui,sans-serif;text-align:center;padding:10px 16px}
+.ihero{position:relative;color:#fff7ee;overflow:hidden;
+  background:#2a0f33 url("{{B}}/assets/cover-bg.webp") right center/cover no-repeat}
+.ihero:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(34,8,42,.92),rgba(42,12,52,.72) 50%,rgba(42,12,52,.25))}
+.ihead{position:relative;max-width:780px;padding:120px 0 150px}
+.back{font:600 13px/1 Manrope,system-ui,sans-serif;color:#ffd9ec;text-decoration:none}
+.back:hover{color:#fff}
+.ihead .over{margin-top:34px;color:#ffd38a}
+.ihead h1{font-size:clamp(44px,7vw,84px);margin:14px 0 22px;font-weight:500;line-height:.98}
+.ihead .lead{font:italic 400 19px/1.6 Literata,Georgia,serif;color:#fbe4ec;margin:0}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin:30px 0 0}
+.ihead .chip{background:rgba(255,247,238,.12);color:#fff7ee;border-color:rgba(255,230,200,.3);backdrop-filter:blur(6px)}
+.body{max-width:780px;margin:0 auto 40px}
+.sec{margin-top:72px;scroll-margin-top:20px}
+.sec-h{display:flex;align-items:center;gap:18px;margin-bottom:6px}
+.sec-h img{width:72px;height:72px;border-radius:50%;box-shadow:0 0 0 2px var(--gold),0 10px 24px rgba(70,20,60,.18);flex:none}
+.sec-h h2{font-size:40px}
+.sec-h .rule{flex:1;height:2px;background:linear-gradient(90deg,var(--c),transparent)}
+.sec-h .cnt{font:600 12px/1 Unbounded,Manrope,sans-serif;color:var(--c)}
+.inav{max-width:780px;margin:24px auto 80px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.inav a{display:block;padding:20px;border:1px solid var(--rule);border-radius:18px;text-decoration:none;background:var(--paper)}
 .inav a:hover{border-color:var(--accent)}
-.inav .over{font-size:11px}
-.inav .t{font:600 20px/1.2 "Cormorant Garamond",Georgia,serif;margin-top:6px}
+.inav .over{font-size:10.5px}
+.inav .t{font:600 21px/1.2 "Cormorant Garamond",Georgia,serif;margin-top:6px}
 .inav .r{text-align:right;grid-column:2}
-.foot{border-top:1px solid var(--rule);padding:28px 0 40px;font:500 13px/1.6 Manrope,system-ui,sans-serif;color:var(--faint);text-align:center}
-.foot a{color:var(--muted)}
+.foot{position:relative;background:var(--plum);color:#e9d6e6;margin-top:40px;padding:110px 0 46px;
+  font:500 13.5px/1.7 Manrope,system-ui,sans-serif;text-align:center}
+.foot .waves{top:-1px;bottom:auto;transform:scaleY(-1)}
+.foot a{color:#ffd38a}
+.foot .ems{display:flex;justify-content:center;gap:10px;margin-bottom:18px}
+.foot .ems img{width:40px;height:40px;border-radius:50%;box-shadow:0 0 0 1.5px var(--gold)}
 
 /* заметка-пересказ */
-.rt{margin-top:12px;font:700 12.5px/1 Manrope,system-ui,sans-serif;color:var(--accent);background:var(--soft);
-  border:1px solid transparent;border-radius:99px;padding:9px 14px 9px 12px;cursor:pointer;display:inline-flex;gap:7px;align-items:center}
-.rt:hover{border-color:var(--accent)}
+.rt{margin-top:14px;font:600 12px/1 Unbounded,Manrope,system-ui,sans-serif;letter-spacing:.02em;color:var(--accent);background:var(--soft);
+  border:1px solid transparent;border-radius:99px;padding:10px 16px 10px 13px;cursor:pointer;display:inline-flex;gap:8px;align-items:center;transition:all .2s}
+.rt:hover{background:var(--grad);color:#fff}
 .rt svg{width:14px;height:14px}
-dialog.note{border:0;padding:0;width:min(680px,calc(100% - 32px));max-width:none;max-height:min(86vh,920px);
-  border-radius:20px;background:var(--paper);color:var(--ink);box-shadow:0 30px 90px rgba(30,10,30,.35);overflow:hidden}
-dialog.note[open]{display:flex;flex-direction:column;animation:pop .22s ease-out}
-dialog.note::backdrop{background:rgba(28,14,30,.5);backdrop-filter:blur(3px)}
-@keyframes pop{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
-.ns{overflow:auto;padding:34px 40px 30px;overscroll-behavior:contain}
-.nx{position:absolute;top:14px;right:14px;width:38px;height:38px;border-radius:50%;border:1px solid var(--rule);
+dialog.note{border:0;padding:0;width:min(700px,calc(100% - 32px));max-width:none;max-height:min(86vh,920px);
+  border-radius:26px;background:var(--paper);color:var(--ink);box-shadow:0 40px 100px rgba(30,5,35,.45);overflow:hidden}
+dialog.note[open]{display:flex;flex-direction:column;animation:pop .25s ease-out}
+dialog.note:before{content:"";height:8px;flex:none;background:var(--grad)}
+dialog.note::backdrop{background:rgba(30,8,36,.55);backdrop-filter:blur(5px)}
+@keyframes pop{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+.ns{overflow:auto;padding:34px 42px 30px;overscroll-behavior:contain}
+.nx{position:absolute;top:22px;right:16px;width:40px;height:40px;border-radius:50%;border:1px solid var(--rule);
   background:var(--paper);color:var(--muted);font:400 22px/1 Manrope,sans-serif;cursor:pointer;z-index:1}
 .nx:hover{color:var(--accent);border-color:var(--accent)}
-.note .over{padding-right:40px}
-.note h3{font-size:31px;margin:10px 0 8px;font-weight:600}
-.note .orig{font-style:italic;color:var(--muted);font-size:15px;margin:0 0 18px}
-.note .nb p{margin:0 0 14px;font-size:17px;line-height:1.7}
-.note .nb p:first-child::first-letter{font:600 3.1em/.8 "Cormorant Garamond",serif;float:left;margin:6px 8px 0 0;color:var(--accent)}
+.note .meta{padding-right:44px}
+.note h3{font-size:34px;margin:10px 0 8px;font-weight:600}
+.note .orig{font-style:italic;color:var(--muted);font-size:15px;margin:0 0 20px}
+.note .nb p{margin:0 0 14px;font-size:17px;line-height:1.72}
+.note .nb p:first-child::first-letter{font:600 3.3em/.8 "Cormorant Garamond",serif;float:left;margin:6px 10px 0 0;
+  background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 .nf{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 16px;align-items:center;border-top:1px solid var(--rule);
-  margin-top:10px;padding-top:16px;font:600 12.5px/1.4 Manrope,system-ui,sans-serif;color:var(--faint)}
+  margin-top:12px;padding-top:16px;font:600 12.5px/1.4 Manrope,system-ui,sans-serif;color:var(--faint)}
 .nf a{color:var(--accent);text-decoration:none}
 .nf a:hover{text-decoration:underline}
 
@@ -208,29 +240,43 @@ dialog.note::backdrop{background:rgba(28,14,30,.5);backdrop-filter:blur(3px)}
   aside{order:-1}
   aside .sticky{position:static}
   .feat{grid-template-columns:1fr}
-  .btn{justify-self:start}
+  .hero{background-image:url("{{B}}/assets/hero-900.webp");background-position:70% center}
+  .hero:before{background:linear-gradient(0deg,rgba(34,8,42,.94) 0%,rgba(34,8,42,.75) 45%,rgba(34,8,42,.2) 100%)}
+  .hero{align-items:flex-end;min-height:88vh}
+  .ihero{background-image:url("{{B}}/assets/cover-bg-900.webp")}
 }
 @media (max-width:560px){
   .wrap{padding:0 16px}
   body{font-size:16.5px}
-  .mast{padding:44px 0 28px}
-  .item h3{font-size:22px}
-  .ihead .lead{font-size:18px}
-  .sec-h h2{font-size:30px}
+  .brand span{display:none}
+  .hero .wrap{padding-bottom:120px}
+  .hero p{font-size:16.5px}
+  .item h3{font-size:23px}
+  .ihead{padding:96px 0 130px}
+  .ihead .lead{font-size:17px}
+  .sec-h img{width:56px;height:56px}
+  .sec-h h2{font-size:31px}
   .inav{grid-template-columns:1fr}
   .inav .r{grid-column:1}
   .tg span{display:none}
-  dialog.note{width:100%;margin:auto 0 0;border-radius:20px 20px 0 0;max-height:90vh}
-  dialog.note[open]{animation:up .25s ease-out}
+  .waves{height:70px}
+  dialog.note{width:100%;margin:auto 0 0;border-radius:26px 26px 0 0;max-height:90vh}
+  dialog.note[open]{animation:up .28s ease-out}
   .ns{padding:28px 22px 26px}
-  .note h3{font-size:26px}
+  .note h3{font-size:28px}
 }
 @keyframes up{from{transform:translateY(40px);opacity:.4}to{transform:none;opacity:1}}
 `;
+// Картинки оформления лежат в public/assets: на воркере их отдаёт статика, на Pages их копирует сборка.
+const css = () => CSS.replaceAll("{{B}}", B);
+const em = (key) => `${B}/assets/${key}.webp`;
+// Психоделические волны-разделители (цвета из иллюстраций ChatGPT).
+const WAVES = `<svg class="waves" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40 C 240 0 480 80 720 40 S 1200 0 1440 40 V120 H0Z" fill="#f59e2c"/><path d="M0 58 C 260 20 500 98 740 58 S 1210 20 1440 58 V120 H0Z" fill="#ec4f8a"/><path d="M0 76 C 250 40 520 112 760 76 S 1220 40 1440 76 V120 H0Z" fill="#9b5de5"/><path d="M0 94 C 240 62 500 124 740 94 S 1200 62 1440 94 V120 H0Z" fill="#1fa5a0"/><path d="M0 108 C 260 84 520 128 760 108 S 1220 84 1440 108 V120 H0Z" fill="var(--bg)"/></svg>`;
+
 
 // env.PUBLIC_URL — постоянный адрес журнала (GitHub Pages); на воркере страницы закрыты от
 // индексации (NOINDEX), чтобы поисковики не видели два одинаковых сайта.
-function layout({ title, description, body, env, path = "/", image, noindex, ld }) {
+function layout({ title, description, body, env, path = "/", image, noindex, ld, onHero }) {
   const ch = env.CHANNEL.replace(/^@/, "");
   return `<!doctype html><html lang="ru"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -246,12 +292,12 @@ ${env.YANDEX_VERIFY ? `<meta name="yandex-verification" content="${esc(env.YANDE
 ${ld ? `<script type="application/ld+json">${JSON.stringify(ld).replace(/</g, "\\u003c")}</script>` : ""}
 ${image ? `<meta property="og:image" content="${esc(image)}"><meta name="twitter:card" content="summary_large_image">` : ""}
 <meta name="color-scheme" content="light dark">
-<link rel="icon" href="data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="#7b3a63"/><text x="16" y="23" font-family="Georgia,serif" font-size="20" font-style="italic" text-anchor="middle" fill="#fff">ψ</text></svg>')}">
+<link rel="icon" href="data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#f59e2c"/><stop offset=".45" stop-color="#ec4f8a"/><stop offset="1" stop-color="#9b5de5"/></linearGradient></defs><circle cx="16" cy="16" r="16" fill="url(#g)"/><text x="16" y="23" font-family="Georgia,serif" font-size="20" font-style="italic" text-anchor="middle" fill="#fff">ψ</text></svg>')}">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="${FONTS}">
-<style>${CSS}</style></head><body>
+<style>${css()}</style></head><body${onHero ? ' class="on-hero"' : ""}>
 <header class="top"><div class="wrap">
-<a class="brand" href="${B}/">Что-то на <i>психоаналитическом</i></a>
+<a class="brand" href="${B}/"><span class="psi">ψ</span><span>Что-то на <i>психоаналитическом</i></span></a>
 <a class="tg" href="https://t.me/${esc(ch)}">✈︎ <span>Канал в Telegram</span></a>
 </div></header>
 ${body}
@@ -272,7 +318,7 @@ ${body}
   if(location.hash.indexOf('#r-')===0) open(location.hash.slice(3),false);
 })();
 </script>
-<footer class="foot"><div class="wrap">Еженедельный обзор канала <a href="https://t.me/${esc(ch)}">@${esc(ch)}</a>. Каждый материал ведёт на первоисточник.</div></footer>
+<footer class="foot">${WAVES}<div class="wrap"><div class="ems">${ORDER.map((k) => `<img src="${em(k)}" alt="" loading="lazy">`).join("")}</div>«Психоанализ за неделю» — еженедельный обзор канала <a href="https://t.me/${esc(ch)}">@${esc(ch)}</a>.<br>Каждый материал ведёт на первоисточник; англоязычные — с пересказом по-русски.</div></footer>
 </body></html>`;
 }
 
@@ -317,14 +363,15 @@ export function renderIndex(issues, env) {
   const total = issues.reduce((n, is) => n + countItems(is), 0);
 
   const feat = last ? `<section class="wrap"><div class="feat">
-<div><div class="over">Свежий выпуск · № ${last.number} · ${esc(period(last.period_from, last.period_to))}</div>
+<a class="cv" href="${issueHref(last.id)}"><img src="${B}/cover/${esc(last.id)}.jpg" alt="Обложка выпуска № ${last.number}" onerror="this.parentNode.style.display='none'"></a>
+<div class="tx"><div class="over">Свежий выпуск · № ${last.number} · ${esc(period(last.period_from, last.period_to))}</div>
 <h2><a href="${issueHref(last.id)}">${esc(last.title)}</a></h2>
 <p class="lead">${esc(last.lead)}</p>
 <div class="chips">${sorted(last.sections).map((s) =>
-  `<a class="chip" style="--c:var(--${s.key})" href="${issueHref(last.id)}#${s.key}"><span class="dot"></span>${esc(SECTIONS[s.key].short)} · ${s.items.length}</a>`).join("")}</div></div>
-<a class="btn" href="${issueHref(last.id)}">Читать выпуск →</a>
-</div></section>` : `<section class="wrap"><div class="feat"><div><div class="over">Скоро</div>
-<h2>Первый выпуск готовится</h2><p class="lead">Каждую пятницу здесь будет появляться обзор недели: новые исследования, новости психоаналитического сообщества, книги, события и культура.</p></div></div></section>`;
+  `<a class="chip" style="--c:var(--${s.key})" href="${issueHref(last.id)}#${s.key}"><img class="em" src="${em(s.key)}" alt="">${esc(SECTIONS[s.key].short)} · ${s.items.length}</a>`).join("")}</div>
+<a class="btn" href="${issueHref(last.id)}">Читать выпуск →</a></div>
+</div></section>` : `<section class="wrap"><div class="feat"><div class="tx"><div class="over">Скоро</div>
+<h2>Первый выпуск готовится</h2><p class="lead">Каждую пятницу здесь будет появляться обзор недели: новые исследования, статьи журналов, подкасты, новости сообщества и культура.</p></div></div></section>`;
 
   const items = issues.flatMap((is) => flat(is).map((x) => ({ ...x, is })));
   const list = items.map(({ it, key, is, uid }) => {
@@ -333,15 +380,15 @@ export function renderIndex(issues, env) {
   }).join("");
 
   const filters = ORDER.map((k) =>
-    `<button class="chip filter" style="--c:var(--${k})" data-f="${k}" aria-pressed="false"><span class="dot"></span>${esc(SECTIONS[k].short)}</button>`).join("");
+    `<button class="chip filter" style="--c:var(--${k})" data-f="${k}" aria-pressed="false"><img class="em" src="${em(k)}" alt="">${esc(SECTIONS[k].short)}</button>`).join("");
 
   const body = `
-<section class="wrap mast">
-<div class="over">Еженедельный обзор</div>
-<h1>Психоанализ <em>за неделю</em></h1>
-<p>Всё, что за неделю вышло о психоанализе: исследования, новые статьи журналов, подкасты и видео, новости сообщества, книги и культура — с пересказами по-русски. Выпуск выходит по пятницам.</p>
-<div class="orn">ψ</div>
-</section>
+<section class="hero"><div class="wrap">
+<div class="over">Еженедельный обзор · по пятницам</div>
+<h1>Психоанализ <em>за&nbsp;неделю</em></h1>
+<p>Всё, что за неделю вышло о психоанализе: исследования, свежие номера журналов, подкасты и видео, новости сообщества, книги и культура — с пересказами по-русски.</p>
+<div class="cta">${last ? `<a class="btn" href="${issueHref(last.id)}">Читать свежий выпуск</a>` : ""}<a class="btn ghost" href="https://t.me/${esc(env.CHANNEL.replace(/^@/, ""))}">Канал в Telegram</a></div>
+</div>${WAVES}</section>
 ${feat}
 <div class="wrap grid">
 <main>
@@ -351,10 +398,10 @@ ${items.length ? `<div class="tools"><input class="search" type="search" placeho
 </main>
 <aside><div class="sticky">
 <div class="h-sec"><h2>Выпуски</h2></div>
-<ul class="issues">${issues.map((is) => `<li><a href="${issueHref(is.id)}">
-<div class="n">№ ${is.number}</div><div class="t">${esc(is.title)}</div>
-<div class="d">${esc(period(is.period_from, is.period_to))} · ${plural(countItems(is), "материал", "материала", "материалов")}</div></a></li>`).join("") || `<li class="empty">Пока пусто</li>`}</ul>
-<div class="about"><b>Как собирается обзор.</b> Каждую неделю мы просматриваем три десятка психоаналитических журналов, научные базы, подкасты и видеоканалы, сайты обществ, издательства и прессу. В обзор попадает только то, что можно открыть и проверить по ссылке; англоязычные материалы мы пересказываем по-русски.</div>
+<ul class="issues">${issues.map((is) => `<li><a href="${issueHref(is.id)}"><img src="${B}/cover/${esc(is.id)}.jpg" alt="" loading="lazy">
+<div><div class="n">№ ${is.number}</div><div class="t">${esc(is.title)}</div>
+<div class="d">${esc(period(is.period_from, is.period_to))}</div></div></a></li>`).join("") || `<li class="empty">Пока пусто</li>`}</ul>
+<div class="about"><div class="ems">${ORDER.map((k) => `<img src="${em(k)}" alt="">`).join("")}</div><b>Как собирается обзор.</b> Каждую неделю мы просматриваем три десятка психоаналитических журналов, научные базы, подкасты и видеоканалы, сайты обществ, издательства и прессу. В обзор попадает только то, что можно открыть и проверить по ссылке; англоязычные материалы мы пересказываем по-русски.</div>
 </div></aside>
 </div>
 <script>
@@ -377,7 +424,7 @@ ${items.length ? `<div class="tools"><input class="search" type="search" placeho
 })();
 </script>`;
   return layout({
-    title: "Психоанализ за неделю — Что-то на психоаналитическом",
+    title: "Психоанализ за неделю — Что-то на психоаналитическом", onHero: true,
     ld: { "@context": "https://schema.org", "@type": "Periodical", name: "Психоанализ за неделю", inLanguage: "ru",
       url: env.PUBLIC_URL + "/", description: "Еженедельный обзор: исследования, новые статьи психоаналитических журналов, подкасты, новости сообщества и культура." },
     description: "Всё, что за неделю вышло о психоанализе: исследования, новые статьи журналов, подкасты и видео, новости сообщества и культура — с пересказами по-русски.",
@@ -392,18 +439,19 @@ export function renderIssue(issue, { prev, next }, env) {
   const uids = new Map(flat(issue).map((x) => [x.it, x.uid]));
   const body = `
 ${issue.status === "draft" ? `<div class="draft">Черновик — ещё не опубликован в канале</div>` : ""}
-<div class="wrap">
+<section class="ihero"><div class="wrap">
 <header class="ihead">
 <a class="back" href="${B}/">← Все выпуски и материалы</a>
 <div class="over">Выпуск № ${issue.number} · ${esc(period(issue.period_from, issue.period_to))}</div>
 <h1>${esc(issue.title)}</h1>
 ${issue.lead ? `<p class="lead">${esc(issue.lead)}</p>` : ""}
 <nav class="toc">${secs.map((s) =>
-  `<a class="chip" style="--c:var(--${s.key})" href="#${s.key}"><span class="dot"></span>${esc(SECTIONS[s.key].title)} · ${s.items.length}</a>`).join("")}</nav>
-</header>
+  `<a class="chip" style="--c:var(--${s.key})" href="#${s.key}"><img class="em" src="${em(s.key)}" alt="">${esc(SECTIONS[s.key].title)} · ${s.items.length}</a>`).join("")}</nav>
+</header></div>${WAVES}</section>
+<div class="wrap">
 <div class="body">
 ${secs.map((s) => `<section class="sec" id="${s.key}" style="--c:var(--${s.key})">
-<div class="sec-h"><span class="sec-mark"></span><h2>${esc(SECTIONS[s.key].title)}</h2><span class="rule"></span><span class="cnt">${s.items.length}</span></div>
+<div class="sec-h"><img src="${em(s.key)}" alt="" loading="lazy"><h2>${esc(SECTIONS[s.key].title)}</h2><span class="rule"></span><span class="cnt">${s.items.length}</span></div>
 ${s.items.map((it) => itemHtml(it, s.key, issue, uids.get(it), false)).join("")}
 </section>`).join("")}
 </div>
@@ -415,7 +463,7 @@ ${next ? `<a class="r" href="${issueHref(next.id)}"><div class="over">Следу
   return layout({
     title: `№ ${issue.number}. ${issue.title} — Психоанализ за неделю`,
     description: issue.lead || `${plural(n, "материал", "материала", "материалов")} за ${period(issue.period_from, issue.period_to)}`,
-    body, env, path: `/issue/${issue.id}/`, image: issue.cover, noindex: issue.status !== "published",
+    body, env, path: `/issue/${issue.id}/`, image: issue.cover, onHero: true, noindex: issue.status !== "published",
     ld: {
       "@context": "https://schema.org", "@type": "PublicationIssue", issueNumber: issue.number,
       name: issue.title, description: issue.lead, inLanguage: "ru",

@@ -24,6 +24,9 @@ def period(a, b):
     return f"{da}–{db} {MONTHS[mb-1]} {yb}"
 
 
+BG = (Path(__file__).resolve().parent.parent / "brand" / "cover-bg.jpg").as_uri()
+
+
 def page(d, number):
     e = html.escape
     counts = {s["key"]: len(s["items"]) for s in d["sections"]}
@@ -33,34 +36,34 @@ def page(d, number):
         f'<span class="chip"><i style="background:{c}"></i>{name} · {counts[k]}</span>'
         for k, name, c in SECTIONS if counts.get(k))
     title = e(d["title"])
-    size = 104 if len(d["title"]) <= 28 else 88 if len(d["title"]) <= 44 else 72
+    size = 96 if len(d["title"]) <= 28 else 80 if len(d["title"]) <= 44 else 66
     return f"""<!doctype html><html><head><meta charset="utf-8">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@600;700&display=block" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@600;700&family=Unbounded:wght@600&display=block" rel="stylesheet">
 <style>
 *{{margin:0;box-sizing:border-box}}
-body{{width:{W}px;height:{H}px;overflow:hidden;color:#fbf3f8;font-family:Manrope,sans-serif;
-  background:radial-gradient(120% 140% at 85% 10%,#7b3a63 0%,#4a2040 45%,#22121f 100%)}}
-.psi{{position:absolute;right:-40px;top:-170px;font:italic 500 900px/1 "Cormorant Garamond",serif;color:rgba(255,220,240,.05)}}
-.frame{{position:absolute;inset:28px;border:1px solid rgba(255,225,242,.28);border-radius:18px}}
-.in{{position:absolute;inset:72px 84px 64px;display:flex;flex-direction:column}}
-.over{{font-weight:700;font-size:17px;letter-spacing:.24em;text-transform:uppercase;color:#e9bfdc}}
-.kick{{font:italic 500 40px/1 "Cormorant Garamond",serif;color:#f4d9ea;margin-top:56px}}
-h1{{font:500 {size}px/1.02 "Cormorant Garamond",serif;margin-top:14px;max-width:1000px;letter-spacing:-.01em}}
-.foot{{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;gap:24px}}
-.no{{font-weight:700;font-size:22px;letter-spacing:.04em}}
-.no b{{display:block;font:500 64px/1 "Cormorant Garamond",serif;letter-spacing:0;margin-bottom:6px}}
-.chips{{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;max-width:820px}}
-.chip{{font-weight:600;font-size:18px;padding:10px 16px;border-radius:99px;background:rgba(255,235,247,.1);
-  border:1px solid rgba(255,225,242,.2);display:inline-flex;align-items:center;gap:9px}}
+body{{width:{W}px;height:{H}px;overflow:hidden;color:#fff8ef;font-family:Manrope,sans-serif;
+  background:#2a1033 url("{BG}") right center/cover no-repeat}}
+.shade{{position:absolute;inset:0;background:linear-gradient(90deg,rgba(38,10,44,.86) 0%,rgba(52,14,58,.62) 42%,rgba(60,16,62,0) 68%)}}
+.frame{{position:absolute;inset:26px;border:1.5px solid rgba(255,214,150,.55);border-radius:22px}}
+.in{{position:absolute;inset:70px 84px 62px;display:flex;flex-direction:column;max-width:760px}}
+.over{{font:600 15px/1 Unbounded,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#ffd38a}}
+.kick{{font:italic 500 40px/1 "Cormorant Garamond",serif;color:#ffc9e4;margin-top:52px}}
+h1{{font:500 {size}px/1.0 "Cormorant Garamond",serif;margin-top:14px;letter-spacing:-.01em;text-shadow:0 2px 24px rgba(30,0,40,.45)}}
+.foot{{margin-top:auto;display:flex;flex-direction:column;gap:22px}}
+.no{{font-weight:700;font-size:21px;letter-spacing:.04em;color:#ffe9c9}}
+.no b{{font:600 30px/1 Unbounded,sans-serif;letter-spacing:0;margin-right:14px;
+  background:linear-gradient(90deg,#ffb347,#ff5fa2,#b98cff);-webkit-background-clip:text;color:transparent}}
+.chips{{display:flex;gap:9px;flex-wrap:wrap;max-width:740px}}
+.chip{{font-weight:600;font-size:17px;padding:9px 15px;border-radius:99px;background:rgba(40,8,48,.45);
+  border:1px solid rgba(255,214,150,.35);display:inline-flex;align-items:center;gap:9px;backdrop-filter:blur(6px)}}
 .chip i{{width:9px;height:9px;border-radius:50%;display:inline-block}}
 </style></head><body>
-<div class="psi">ψ</div><div class="frame"></div>
+<div class="shade"></div><div class="frame"></div>
 <div class="in">
 <div class="over">Что-то на психоаналитическом</div>
 <div class="kick">Психоанализ за неделю</div>
 <h1>{title}</h1>
-<div class="foot"><div class="no"><b>№ {number}</b>{e(period(d["period_from"], d["period_to"]))}</div>
-<div class="chips">{chips}</div></div>
+<div class="foot"><div class="chips">{chips}</div><div class="no"><b>№ {number}</b>{e(period(d["period_from"], d["period_to"]))}</div></div>
 </div></body></html>"""
 
 
@@ -74,7 +77,7 @@ def main():
         p = Path(tmp) / "cover.html"
         p.write_text(page(d, number))
         subprocess.run([CHROME, "--headless=new", "--hide-scrollbars", "--force-device-scale-factor=1.5",
-                        f"--window-size={W},{H}", "--virtual-time-budget=8000",
+                        f"--window-size={W},{H}", "--virtual-time-budget=8000", "--allow-file-access-from-files",
                         f"--screenshot={png}", p.as_uri()], check=True, capture_output=True)
     # PNG весит ~700 КБ, JPEG того же вида — в несколько раз меньше.
     subprocess.run(["sips", "-s", "format", "jpeg", "-s", "formatOptions", "88", str(png), "--out", str(out)],
