@@ -12,9 +12,9 @@ from pathlib import Path
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 W, H = 1280, 720
 MONTHS = "января февраля марта апреля мая июня июля августа сентября октября ноября декабря".split()
-SECTIONS = [("science", "Наука", "#a9b4f5"), ("journals", "Журналы", "#e8cd86"),
-            ("community", "Сообщество", "#eab0d3"), ("ru", "По-русски", "#f0b496"),
-            ("media", "Подкасты и видео", "#f4a9b6"), ("culture", "Культура", "#93d6c1")]
+SECTIONS = [("science", "Наука", "#8fd0cd"), ("journals", "Журналы", "#e6c27a"),
+            ("community", "Сообщество", "#f0a37c"), ("ru", "По-русски", "#e8998a"),
+            ("media", "Подкасты и видео", "#a9bde0"), ("culture", "Культура", "#8fd2b4")]
 
 
 def period(a, b):
@@ -38,24 +38,23 @@ def page(d, number):
     title = e(d["title"])
     size = 96 if len(d["title"]) <= 28 else 80 if len(d["title"]) <= 44 else 66
     return f"""<!doctype html><html><head><meta charset="utf-8">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@600;700&family=Unbounded:wght@600&display=block" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@600;700&display=block" rel="stylesheet">
 <style>
 *{{margin:0;box-sizing:border-box}}
-body{{width:{W}px;height:{H}px;overflow:hidden;color:#fff8ef;font-family:Manrope,sans-serif;
-  background:#2a1033 url("{BG}") right center/cover no-repeat}}
-.shade{{position:absolute;inset:0;background:linear-gradient(90deg,rgba(38,10,44,.86) 0%,rgba(52,14,58,.62) 42%,rgba(60,16,62,0) 68%)}}
-.frame{{position:absolute;inset:26px;border:1.5px solid rgba(255,214,150,.55);border-radius:22px}}
+body{{width:{W}px;height:{H}px;overflow:hidden;color:#f6f1ea;font-family:Manrope,sans-serif;
+  background:#1c2729 url("{BG}") right center/cover no-repeat}}
+.shade{{position:absolute;inset:0;background:linear-gradient(90deg,rgba(16,24,26,.72) 0%,rgba(16,24,26,.45) 45%,rgba(16,24,26,0) 70%)}}
+.frame{{position:absolute;inset:26px;border:1px solid rgba(240,215,190,.55);border-radius:4px}}
 .in{{position:absolute;inset:70px 84px 62px;display:flex;flex-direction:column;max-width:760px}}
-.over{{font:600 15px/1 Unbounded,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#ffd38a}}
-.kick{{font:italic 500 40px/1 "Cormorant Garamond",serif;color:#ffc9e4;margin-top:52px}}
+.over{{font:700 15px/1 Manrope,sans-serif;letter-spacing:.28em;text-transform:uppercase;color:#f0c7a6}}
+.kick{{font:italic 500 40px/1 "Cormorant Garamond",serif;color:#f2d6c2;margin-top:52px}}
 h1{{font:500 {size}px/1.0 "Cormorant Garamond",serif;margin-top:14px;letter-spacing:-.01em;text-shadow:0 2px 24px rgba(30,0,40,.45)}}
 .foot{{margin-top:auto;display:flex;flex-direction:column;gap:22px}}
 .no{{font-weight:700;font-size:21px;letter-spacing:.04em;color:#ffe9c9}}
-.no b{{font:600 30px/1 Unbounded,sans-serif;letter-spacing:0;margin-right:14px;
-  background:linear-gradient(90deg,#ffb347,#ff5fa2,#b98cff);-webkit-background-clip:text;color:transparent}}
+.no b{{font:500 40px/1 "Cormorant Garamond",serif;letter-spacing:0;margin-right:14px;color:#f0b48c}}
 .chips{{display:flex;gap:9px;flex-wrap:wrap;max-width:740px}}
-.chip{{font-weight:600;font-size:17px;padding:9px 15px;border-radius:99px;background:rgba(40,8,48,.45);
-  border:1px solid rgba(255,214,150,.35);display:inline-flex;align-items:center;gap:9px;backdrop-filter:blur(6px)}}
+.chip{{font-weight:600;font-size:17px;padding:9px 15px;border-radius:99px;background:rgba(16,24,26,.4);
+  border:1px solid rgba(240,215,190,.35);display:inline-flex;align-items:center;gap:9px;backdrop-filter:blur(6px)}}
 .chip i{{width:9px;height:9px;border-radius:50%;display:inline-block}}
 </style></head><body>
 <div class="shade"></div><div class="frame"></div>
