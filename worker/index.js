@@ -47,6 +47,7 @@ export default {
       if (p === "/webhook" && request.method === "POST") return await webhook(request, env);
       if (p === "/api/draft" && request.method === "POST") return await postDraft(request, env);
       if (p === "/api/latest") return await latest(env);
+      if (p === "/api/update-published" && request.method === "POST") return await updatePublished(request, env);
       if (p === "/api/preview" && request.method === "POST") return await preview(request, env);
       const c = p.match(/^\/(api\/)?cover\/(\d{4}-\d{2}-\d{2})(\.jpg)?$/);
       if (c && c[1] && request.method === "PUT") return await putCover(request, env, c[2]);
@@ -278,6 +279,28 @@ async function postDraft(request, env) {
   if (!sent.ok) return json({ error: "telegram", details: sent.description }, 502);
   await env.DB.prepare("UPDATE issues SET draft_msg_id = ? WHERE id = ?").bind(sent.result.message_id, d.id).run();
   return json({ ok: true, page: issueUrl(env, d.id) });
+}
+
+// Поправить уже опубликованный выпуск: данные журнала и сам пост в канале (бот правит своё сообщение).
+async function updatePublished(request, env) {
+  if (!authorized(request, env)) return json({ error: "unauthorized" }, 401);
+  const d = await request.json();
+  const errs = validate(d);
+  if (errs.length) return json({ error: "invalid", details: errs }, 400);
+  const row = await env.DB.prepare("SELECT status, channel_msg_id FROM issues WHERE id = ?").bind(d.id).first();
+  if (!row || row.status !== "published") return json({ error: "not_published" }, 409);
+  await env.DB.prepare("UPDATE issues SET title=?, lead=?, sections=?, post=? WHERE id=?")
+    .bind(d.title, d.lead || "", JSON.stringify(d.sections.filter((s) => (s.items || []).length)), d.post, d.id).run();
+  let edited = null;
+  if (row.channel_msg_id) {
+    const r = await tg(env, "editMessageText", {
+      chat_id: env.CHANNEL, message_id: row.channel_msg_id, text: d.post, parse_mode: "HTML",
+      link_preview_options: await previewOptions(env, d.id, publicUrl(env, d.id)),
+    });
+    edited = r.ok || r.description;
+  }
+  await rebuildPages(env);
+  return json({ ok: true, edited });
 }
 
 // ---------- Кнопки ----------
