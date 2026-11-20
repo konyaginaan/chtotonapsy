@@ -2,11 +2,13 @@
 
 export const SECTIONS = {
   science:   { title: "Наука и исследования", short: "Наука" },
+  journals:  { title: "Свежие номера журналов", short: "Журналы" },
   community: { title: "Сообщество",          short: "Сообщество" },
   ru:        { title: "Русскоязычное поле",  short: "По-русски" },
+  media:     { title: "Подкасты и видео",    short: "Подкасты и видео" },
   culture:   { title: "Культура и медиа",    short: "Культура" },
 };
-const ORDER = ["science", "community", "ru", "culture"];
+const ORDER = ["science", "journals", "community", "ru", "media", "culture"];
 
 const MONTHS = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа",
   "сентября", "октября", "ноября", "декабря"];
@@ -50,13 +52,13 @@ const CSS = `
 :root{
   --bg:#f6f2f4; --paper:#fffdfb; --ink:#241c29; --muted:#6e6476; --faint:#9a90a2;
   --rule:#e4d9e2; --accent:#7b3a63; --accent-ink:#5f2a4b; --soft:#f1e5ee; --mark:#efd9e8;
-  --science:#4f5fa8; --community:#7b3a63; --ru:#a2573a; --culture:#3f7f6e;
+  --science:#4f5fa8; --journals:#8a6a1f; --community:#7b3a63; --ru:#a2573a; --media:#b0485c; --culture:#3f7f6e;
   --shadow:0 1px 2px rgba(60,30,60,.05),0 8px 28px rgba(60,30,60,.06);
 }
 @media (prefers-color-scheme:dark){:root{
   --bg:#141117; --paper:#1c171f; --ink:#eee7f0; --muted:#b0a5b6; --faint:#857a8c;
   --rule:#33293a; --accent:#e0a3c8; --accent-ink:#f0c2dd; --soft:#2a2030; --mark:#3a2840;
-  --science:#9eaaf0; --community:#e0a3c8; --ru:#eaa688; --culture:#86cbb6;
+  --science:#9eaaf0; --journals:#e2c67c; --community:#e0a3c8; --ru:#eaa688; --media:#f2a3b1; --culture:#86cbb6;
   --shadow:none;
 }}
 *{box-sizing:border-box}
@@ -125,6 +127,11 @@ h1,h2,h3{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;line-hei
 .ext{font:400 .7em/1 Manrope,sans-serif;color:var(--faint);margin-left:4px}
 .authors{font-style:italic;color:var(--muted);font-size:15px;margin:0 0 6px}
 .item p.sum{margin:0;font-size:16.5px}
+.arts{list-style:none;margin:12px 0 0;padding:0;border-left:2px solid var(--rule);font-size:15.5px}
+.arts li{padding:7px 0 7px 16px;line-height:1.45}
+.arts a{text-decoration:none;font-weight:600}
+.arts a:hover{color:var(--accent)}
+.arts .o{display:block;font-size:13.5px;color:var(--muted);font-style:italic}
 .flag{font:700 10.5px/1 Manrope,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.08em;
   border:1px solid currentColor;border-radius:4px;padding:3px 5px;color:var(--culture)}
 .from{font:600 12.5px/1 Manrope,system-ui,sans-serif;color:var(--faint);margin-top:10px;display:inline-block;text-decoration:none}
@@ -284,6 +291,8 @@ function itemHtml(it, key, issue, uid, showFrom) {
 <h3><a href="${safeUrl(it.url)}" target="_blank" rel="noopener">${esc(it.title)}<span class="ext">↗</span></a></h3>
 ${it.authors || it.original ? `<p class="authors">${[it.authors, it.original && `«${it.original}»`].filter(Boolean).map(esc).join(" · ")}</p>` : ""}
 ${it.summary ? `<p class="sum">${esc(it.summary)}</p>` : ""}
+${Array.isArray(it.articles) && it.articles.length ? `<ul class="arts">${it.articles.map((a) =>
+  `<li><a href="${safeUrl(a.url)}" target="_blank" rel="noopener">${esc(a.title)}</a>${a.authors ? ` · ${esc(a.authors)}` : ""}${a.original ? `<span class="o">${esc(a.original)}</span>` : ""}</li>`).join("")}</ul>` : ""}
 ${it.retelling ? `<button class="rt" data-r="${esc(uid)}">${BOOK}Пересказ по-русски</button>${retellingHtml(it, key, uid, meta)}` : ""}
 ${showFrom ? `<a class="from" href="/issue/${esc(issue.id)}">из выпуска № ${issue.number} · ${esc(period(issue.period_from, issue.period_to))}</a>` : ""}
 </article>`;

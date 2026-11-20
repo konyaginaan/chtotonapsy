@@ -6,5 +6,6 @@
 - Выпуски — `issues/ГГГГ-ММ-ДД.json`, черновик отправляется `tools/send-draft.sh` (ключ в `~/.config/chtotonapsy/draft_key`).
 - Пост средней длины, остальное — в журнале. Черновик приходит владелице в личку с кнопкой «Опубликовать»; самому в канал не публиковать.
 - Задача по расписанию `psy-weekly-digest`, пт 15:30. Если Мак был выключен — собрать при включении, всё равно через одобрение. Бот напоминает включить компьютер в пт после 17:00 и сб после 10:00 (Кипр).
+- Постоянные источники: sources.json + tools/collect.py (Crossref по ISSN, RSS подкастов, RSS YouTube) → разделы journals и media.
 - Поиск: PubMed E-utilities (через curl — у python urllib проблемы с SSL), Perplexity в Chrome (perplexity.ai/search?q=), WebSearch. Perplexity путает даты — проверять всё.
 - Бот общий с кипрским каналом (@vokrugkipra_bot, `~/projects/dust-cyprus`); вебхук подписан только на callback_query.

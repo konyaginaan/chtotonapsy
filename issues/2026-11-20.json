@@ -103,6 +103,437 @@
       ]
     },
     {
+      "key": "journals",
+      "items": [
+        {
+          "kind": "новый номер",
+          "title": "The Psychoanalytic Quarterly, т. 95, № 4",
+          "source": "The Psychoanalytic Quarterly",
+          "date": "",
+          "lang": "en",
+          "url": "https://doi.org/10.1080/00332828.2026.2737071",
+          "articles": [
+            {
+              "title": "Бион в Италии: от рецепции к постбионианской теории поля",
+              "original": "Bion in Italy: from Reception to Post-Bionian Analytic Field Theory",
+              "authors": "Civitarese G.",
+              "url": "https://doi.org/10.1080/00332828.2026.2737071"
+            },
+            {
+              "title": "Бион и постбионианцы на Западном побережье США: 1967–2025",
+              "original": "The Work of W.R. Bion and Post-Bionians on the West Coast: 1967-2025",
+              "authors": "Aguayo J.",
+              "url": "https://doi.org/10.1080/00332828.2026.2744137"
+            },
+            {
+              "title": "Клинические парадигмы Мелани Кляйн и Дональда Винникотта: сравнение и диалог (рецензия)",
+              "original": "The Clinical Paradigms of Melanie Klein and Donald Winnicott: Comparisons and Dialogues",
+              "authors": "Lawner P.",
+              "url": "https://doi.org/10.1080/00332828.2026.2730113"
+            },
+            {
+              "title": "Как Бион повлиял на Бостон",
+              "original": "On Wilfred Bion’s Impact In Boston",
+              "authors": "Levine H., Brown L.",
+              "url": "https://doi.org/10.1080/00332828.2026.2754425"
+            },
+            {
+              "title": "Бион в Латинской Америке",
+              "original": "Bion In Latin America",
+              "authors": "Nemas C.",
+              "url": "https://doi.org/10.1080/00332828.2026.2737759"
+            },
+            {
+              "title": "«Лирическое гостеприимство»: Бион в Израиле",
+              "original": "Bion’s lyrical hospitality in Israel",
+              "authors": "Amir D.",
+              "url": "https://doi.org/10.1080/00332828.2026.2745590"
+            },
+            {
+              "title": "Психоаналитическая теория поля: современное введение (рецензия)",
+              "original": "Psychoanalytic Field Theory: A Contemporary Introduction",
+              "authors": "Schmiedl-Neuburg H.",
+              "url": "https://doi.org/10.1080/00332828.2026.2730925"
+            },
+            {
+              "title": "«Труд любви» (рецензия)",
+              "original": "Love’s Labor",
+              "authors": "Ackerman S.",
+              "url": "https://doi.org/10.1080/00332828.2026.2730114"
+            },
+            {
+              "title": "«Бион на высоте 20 000 футов»: шесть эссе о мировом влиянии Биона (рецензия)",
+              "original": "Bion at 20,000 Feet. Six Essays on the Global Impact of the Thinking of W. R. Bion",
+              "authors": "Barahona R.",
+              "url": "https://doi.org/10.1080/00332828.2026.2736422"
+            },
+            {
+              "title": "Теория поля в клинике: диалог реляционного, постбионианского психоанализа и гештальт-терапии (рецензия)",
+              "original": "Field Perspectives in Clinical Practice: A Dialogue Between Relational Psychoanalysis, Post-Bionian Psychoanalysis, and Gestalt Therapy",
+              "authors": "Deles-Vēliņš G.",
+              "url": "https://doi.org/10.1080/00332828.2026.2730115"
+            },
+            {
+              "title": "«Современная психоаналитическая практика» (рецензия)",
+              "original": "Contemporary Psychoanalytic Practice",
+              "authors": "Carrillo Retana E.",
+              "url": "https://doi.org/10.1080/00332828.2026.2730112"
+            },
+            {
+              "title": "Бион в Лондоне",
+              "original": "Bion In London",
+              "authors": "Abel-Hirsch N.",
+              "url": "https://doi.org/10.1080/00332828.2026.2757607"
+            }
+          ],
+          "summary": "Тематический номер о том, как идеи Биона прижились в разных странах: Лондон, Италия, Латинская Америка, Западное побережье США, Бостон, Израиль. Плюс рецензии на свежие книги о теории поля."
+        },
+        {
+          "kind": "новые статьи",
+          "title": "The Psychoanalytic Study of the Child",
+          "source": "The Psychoanalytic Study of the Child",
+          "date": "",
+          "lang": "en",
+          "url": "https://doi.org/10.1080/00797308.2026.2751917",
+          "articles": [
+            {
+              "title": "«Оркестр потерял партитуру»: пубертат, война и борьба за психическую целостность у украинского мальчика",
+              "original": "“The Orchestra Lost Its Score”: Puberty, War, and the Struggle for Psychic Integration in a Ukrainian Boy",
+              "authors": "Rudenko R.",
+              "url": "https://doi.org/10.1080/00797308.2026.2751917"
+            },
+            {
+              "title": "Риск и устойчивость детей, переживших войну",
+              "original": "Risk and Resilience of Children Exposed to War",
+              "authors": "Masten A., Gewirtz A.",
+              "url": "https://doi.org/10.1080/00797308.2026.2744543"
+            },
+            {
+              "title": "Опыт беженца: история устойчивости",
+              "original": "Refugee Experience: A Story of Resilience",
+              "authors": "Soliman I.",
+              "url": "https://doi.org/10.1080/00797308.2026.2751915"
+            },
+            {
+              "title": "Украинские подростки на кушетке во время войны",
+              "original": "Ukrainian Youth on the Couch in Times of War",
+              "authors": "Kolisnyk L.",
+              "url": "https://doi.org/10.1080/00797308.2026.2751922"
+            },
+            {
+              "title": "Психоаналитическая работа в поле непрерывной травмы в Газе: онтологический коллапс, символизация и новое понимание устойчивости",
+              "original": "Psychoanalytic Work in a Field of Continuous Trauma in Gaza: Ontological Collapse, Symbolization, and the Reconceptualization of Resilience",
+              "authors": "Al-Arjani S.",
+              "url": "https://doi.org/10.1080/00797308.2026.2744540"
+            },
+            {
+              "title": "«Генератор любви»: восстанавливающая сила любви после травмы",
+              "original": "A Generator of Love: The Restorative Power of Love in the Aftermath of Trauma",
+              "authors": "Roth M.",
+              "url": "https://doi.org/10.1080/00797308.2026.2744541"
+            },
+            {
+              "title": "Дети, насилие и война: вступление к разделу",
+              "original": "Children, Violence, and War – Introduction to the Section",
+              "authors": "Masur C.",
+              "url": "https://doi.org/10.1080/00797308.2026.2730111"
+            }
+          ],
+          "summary": "Новый раздел «Дети, насилие и война»: Украина, Газа, беженцы. Среди авторов — Салем Эйд аль-Арджани, лауреат премии Сигурни этого года, и Энн Мастен, ведущий исследователь устойчивости."
+        },
+        {
+          "kind": "новые статьи",
+          "title": "Psychoanalytic Inquiry",
+          "source": "Psychoanalytic Inquiry",
+          "date": "",
+          "lang": "en",
+          "url": "https://doi.org/10.1080/07351690.2026.2754007",
+          "articles": [
+            {
+              "title": "Переварить смертность в эпоху климатической тревоги",
+              "original": "Metabolizing Mortality in the Era of Climate Anxiety",
+              "authors": "Emanuel L.",
+              "url": "https://doi.org/10.1080/07351690.2026.2754007"
+            },
+            {
+              "title": "(Не)возможность восстановить отношения: разговор о «Маленькой жизни» Ханьи Янагихары",
+              "original": "The (Im)Possibility of Relational Repair: A Conversation on Hanya Yanagihara’s A Little Life",
+              "authors": "Drichel S., Zolkos M.",
+              "url": "https://doi.org/10.1080/07351690.2026.2738531"
+            },
+            {
+              "title": "Прощай, психоанализ. Прощай, сеттинг. Палестина. Тверия.",
+              "original": "Bye. Psychoanalysis. Bye. Frame. Palestine. Tiberias.",
+              "authors": "Obeid N.",
+              "url": "https://doi.org/10.1080/07351690.2026.2760721"
+            },
+            {
+              "title": "Река, которую у них не отнять",
+              "original": "The River They Could Not Take",
+              "authors": "Riker J.",
+              "url": "https://doi.org/10.1080/07351690.2026.2744524"
+            }
+          ],
+          "summary": "Статьи, вышедшие онлайн до номера: климатическая тревога, «Маленькая жизнь» Янагихары, Палестина."
+        },
+        {
+          "kind": "новые статьи",
+          "title": "Psychoanalysis, Self and Context",
+          "source": "Psychoanalysis, Self and Context",
+          "date": "",
+          "lang": "en",
+          "url": "https://doi.org/10.1080/24720038.2026.2765756",
+          "articles": [
+            {
+              "title": "Стул рядом со стулом",
+              "original": "The chair beside the chair",
+              "authors": "Wu S.",
+              "url": "https://doi.org/10.1080/24720038.2026.2765756"
+            },
+            {
+              "title": "Узнавание",
+              "original": "Anagnorisis",
+              "authors": "Sampurno M.",
+              "url": "https://doi.org/10.1080/24720038.2026.2763425"
+            },
+            {
+              "title": "«Формальное чувство»: поэзия и работа эмоционального роста",
+              "original": "A formal feeling: Poetry and the work of emotional growth",
+              "authors": "Gerber N.",
+              "url": "https://doi.org/10.1080/24720038.2026.2765753"
+            },
+            {
+              "title": "Любовь и дух в психотерапии",
+              "original": "Love and spirit in psychotherapy",
+              "authors": "Verner D.",
+              "url": "https://doi.org/10.1080/24720038.2026.2757017"
+            }
+          ]
+        },
+        {
+          "kind": "новые статьи",
+          "title": "Psychoanalysis, Culture & Society",
+          "source": "Psychoanalysis, Culture & Society",
+          "date": "",
+          "lang": "en",
+          "url": "https://doi.org/10.1057/s41282-026-00702-9",
+          "articles": [
+            {
+              "title": "Геза Рохейм о трикстере: психоаналитическое прочтение культурного героя",
+              "original": "Géza Róheim’s research on trickster: a psychoanalytic reading of the cultural hero",
+              "authors": "Curti L., Picione R.",
+              "url": "https://doi.org/10.1057/s41282-026-00702-9"
+            },
+            {
+              "title": "«Творческое „я“: за пределами индивидуализма» — рецензия и круглый стол",
+              "original": "Book review and roundtable discussion; The creative self: beyond individualism",
+              "authors": "Owens C., Newman G., Lieber E., Jessup H. и др.",
+              "url": "https://doi.org/10.1057/s41282-026-00634-4"
+            },
+            {
+              "title": "Преступление и инсценировка сообщества: ответственность в ранней лакановской криминологии (1932–1950)",
+              "original": "Crime and the staging of community: the concept of responsibility in early Lacanian criminology (1932–1950)",
+              "authors": "Valle Junior L.",
+              "url": "https://doi.org/10.1057/s41282-026-00697-3"
+            },
+            {
+              "title": "Почему война — всё ещё?",
+              "original": "Why war, still?",
+              "authors": "Andersson P.",
+              "url": "https://doi.org/10.1057/s41282-026-00699-1"
+            }
+          ],
+          "summary": "Трикстер у Гезы Рохейма, ранняя лакановская криминология и вопрос «почему война?» сегодня."
+        },
+        {
+          "kind": "новые статьи",
+          "title": "The American Journal of Psychoanalysis",
+          "source": "The American Journal of Psychoanalysis",
+          "date": "",
+          "lang": "en",
+          "url": "https://doi.org/10.1057/s11231-026-09586-1",
+          "articles": [
+            {
+              "title": "Рецензия: С. Болоньини, Л. Николи «Фрейд и меняющийся мир»",
+              "original": "Freud and the Changing World: Contemporary Psychoanalysis and Its Troubles, by Stefano Bolognini and Luca Nicoli, Routledge, Abingdon and New York, 2024, 182 pp.",
+              "authors": "Iscan C.",
+              "url": "https://doi.org/10.1057/s11231-026-09586-1"
+            },
+            {
+              "title": "Рецензия: Судхир Какар «Индийские джунгли: психоанализ и незападные цивилизации»",
+              "original": "The Indian Jungle: Psychoanalysis and Non-Western Civilizations, by Sudhir Kakar, Karnac Books Ltd, Bicester, Oxfordshire, 2024, 128 pp.",
+              "authors": "Janowitz N.",
+              "url": "https://doi.org/10.1057/s11231-026-09587-0"
+            },
+            {
+              "title": "Рецензия: Аллан Шор «Правое полушарие и происхождение человеческой природы»",
+              "original": "The Right Brain and the Origin of Human Nature, by Allan Schore, W. W. Norton & Company, New York, 2025, 427 pp.",
+              "authors": "Mucci C.",
+              "url": "https://doi.org/10.1057/s11231-026-09589-y"
+            }
+          ],
+          "summary": "Три рецензии: Болоньини и Николи о Фрейде в меняющемся мире, Судхир Какар о психоанализе вне Запада, Аллан Шор о правом полушарии."
+        },
+        {
+          "kind": "новые статьи",
+          "title": "The Scandinavian Psychoanalytic Review",
+          "source": "The Scandinavian Psychoanalytic Review",
+          "date": "",
+          "lang": "en",
+          "url": "https://doi.org/10.1080/01062301.2026.2762431",
+          "articles": [
+            {
+              "title": "Приручить Морру: мир муми-троллей в «Папе и море» Туве Янссон",
+              "original": "Taming the Groke: Tove Jansson’s Moomin universe as unfolding in Moominpappa at Sea",
+              "authors": "Wolf H.",
+              "url": "https://doi.org/10.1080/01062301.2026.2762431"
+            },
+            {
+              "title": "Душевное смятение и поэтическое «я»: «Тюльпаны» Сильвии Плат, её дневники и письма",
+              "original": "The influence of mental turmoil on the poetic persona: a study of Tulips and corresponding journals and letters by Sylvia Plath",
+              "authors": "Fernandes S.",
+              "url": "https://doi.org/10.1080/01062301.2026.2763190"
+            }
+          ],
+          "summary": "Муми-тролли Туве Янссон и «Тюльпаны» Сильвии Плат."
+        },
+        {
+          "kind": "новый номер",
+          "title": "Journal of Infant, Child, and Adolescent Psychotherapy, т. 25, № 4",
+          "source": "Journal of Infant, Child, and Adolescent Psychotherapy",
+          "date": "",
+          "lang": "en",
+          "url": "https://doi.org/10.1080/15289168.2026.2757525",
+          "articles": [
+            {
+              "title": "Чрезмерно «хороший ребёнок» как стратегия привязанности: уступчивость, ложное «я» и безопасность в отношениях",
+              "original": "Excessive Good-Child Adaptation as an Attachment-Based Strategy: Compliance, False-Self Development, and Relational Safety in Childhood",
+              "authors": "Demirors B.",
+              "url": "https://doi.org/10.1080/15289168.2026.2757525"
+            },
+            {
+              "title": "Материнская проекция и распределение ролей в семье: психодинамический случай",
+              "original": "Maternal Projection and the Organisation of Family Roles: A Psychodynamic Case Study with Systemic Implications",
+              "authors": "Jansen R.",
+              "url": "https://doi.org/10.1080/15289168.2026.2751063"
+            }
+          ]
+        },
+        {
+          "kind": "новая статья",
+          "title": "International Forum of Psychoanalysis",
+          "source": "International Forum of Psychoanalysis",
+          "date": "",
+          "lang": "en",
+          "url": "https://doi.org/10.1080/0803706x.2026.2750502",
+          "articles": [
+            {
+              "title": "Предательство как семиотический разрыв: доверие, репрезентация и жуткий другой",
+              "original": "Betrayal as semiotic rupture: Trust, representation, and the uncanny other",
+              "authors": "Roth L.",
+              "url": "https://doi.org/10.1080/0803706x.2026.2750502"
+            }
+          ]
+        },
+        {
+          "kind": "новая статья",
+          "title": "Psychoanalytic Psychotherapy",
+          "source": "Psychoanalytic Psychotherapy",
+          "date": "",
+          "lang": "en",
+          "url": "https://doi.org/10.1080/02668734.2026.2754421",
+          "articles": [
+            {
+              "title": "Посттравматическая позиция жертвы: враждебность, приписанная доброжелательным другим",
+              "original": "Post-traumatic victimhood - attributing hostility to the benevolent others",
+              "authors": "Berman A.",
+              "url": "https://doi.org/10.1080/02668734.2026.2754421"
+            }
+          ]
+        },
+        {
+          "kind": "новая статья",
+          "title": "British Journal of Psychotherapy",
+          "source": "British Journal of Psychotherapy",
+          "date": "",
+          "lang": "en",
+          "url": "https://doi.org/10.1111/bjp.70056",
+          "articles": [
+            {
+              "title": "Кархана: конференция как «мастерская»",
+              "original": "Karkhana (کارخانہ): The conference space as a ‘place of making’",
+              "authors": "Bolognani M., Khan S., Sarra N., Ali A.",
+              "url": "https://doi.org/10.1111/bjp.70056"
+            }
+          ]
+        },
+        {
+          "kind": "новая статья",
+          "title": "Psychodynamic Practice",
+          "source": "Psychodynamic Practice",
+          "date": "",
+          "lang": "en",
+          "url": "https://doi.org/10.1080/14753634.2026.2762776",
+          "articles": [
+            {
+              "title": "Движение психики: тело, дыхание и движение в терапии",
+              "original": "The mind movement: integrating body, breath and movement in therapy",
+              "authors": "Braddock K.",
+              "url": "https://doi.org/10.1080/14753634.2026.2762776"
+            }
+          ]
+        },
+        {
+          "kind": "новый номер",
+          "title": "International Journal of Applied Psychoanalytic Studies, т. 23, № 4",
+          "source": "International Journal of Applied Psychoanalytic Studies",
+          "date": "",
+          "lang": "en",
+          "url": "https://doi.org/10.1002/aps.70079",
+          "articles": [
+            {
+              "title": "Психоанализ и школьная психология: к психоаналитически информированной работе в образовании",
+              "original": "Psychoanalysis and School Psychology: Toward a Psychoanalytically Informed Framework for Educational Practice",
+              "authors": "Lianos P.",
+              "url": "https://doi.org/10.1002/aps.70079"
+            }
+          ]
+        },
+        {
+          "kind": "новая статья",
+          "title": "Psychoanalytic Social Work",
+          "source": "Psychoanalytic Social Work",
+          "date": "",
+          "lang": "en",
+          "url": "https://doi.org/10.1080/15228878.2026.2763137",
+          "articles": [
+            {
+              "title": "Психология самости: от теории к практике",
+              "original": "Self Psychology: Moving from Theory to Practice",
+              "authors": "Migler R.",
+              "url": "https://doi.org/10.1080/15228878.2026.2763137"
+            }
+          ]
+        },
+        {
+          "kind": "новая статья",
+          "title": "Journal of Analytical Psychology",
+          "source": "Journal of Analytical Psychology",
+          "date": "",
+          "lang": "en",
+          "url": "https://doi.org/10.1111/1468-5922.70121",
+          "articles": [
+            {
+              "title": "Есть тут кто-нибудь? Срыв на пути выхода из травматической диссоциации",
+              "original": "Is Any Body There? Breakdown in Recovery from Traumatic Dissociation 1",
+              "authors": "Wright S.",
+              "url": "https://doi.org/10.1111/1468-5922.70121"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "key": "community",
       "items": [
         {
@@ -207,7 +638,81 @@
           "summary": "Идёт цикл из пяти семинаров психоаналитика и литературоведа Джоша Коэна: влечение к смерти у Фрейда, в психоаналитической мысли после него и в современной культуре."
         }
       ]
+    },
+    {
+      "key": "media",
+      "items": [
+        {
+          "kind": "подкаст",
+          "title": "Бессознательное устроено как экран",
+          "original": "RU429: Lucas Ferraço Nassif — The Contemporary Unconscious Is Structured as Screen-Based Media",
+          "source": "Rendering Unconscious",
+          "date": "2026-11-19",
+          "lang": "en",
+          "url": "https://renderingunconscious.substack.com/p/ru429-lucas-ferraco-nassif-the-contemporary",
+          "summary": "Ванесса Синклер беседует с Лукасом Ферасо Насифом, автором книги «Unconscious/Television», о том, как клиническая работа и изучение медиа привели его к мысли, что современное бессознательное устроено как экранные медиа."
+        },
+        {
+          "kind": "подкаст",
+          "title": "Сон «Человека-волка», часть вторая",
+          "original": "Psychoanalysis and Addiction: the dream of the \"Wolf Man\" (part two)",
+          "source": "Psychoanalysis and Addiction",
+          "date": "2026-11-19",
+          "lang": "en",
+          "url": "https://www.buzzsprout.com/1997449/episodes/20148752",
+          "summary": "Грэм Дэниелс продолжает разбирать знаменитый случай Фрейда: сон, последействие, кастрация, первичное и вторичное вытеснение — и первосцена, закодированная в сновидении пациента, на которого давил назначенный срок окончания анализа."
+        },
+        {
+          "kind": "подкаст",
+          "title": "Эволюционные корни архетипа Матери",
+          "original": "The Evolutionary Basis of the Mother Archetype",
+          "source": "This Jungian Life",
+          "date": "2026-11-19",
+          "lang": "en",
+          "url": "https://podcasters.spotify.com/pod/show/thisjungianlifepodcast/episodes/The-Evolutionary-Basis-of-the-Mother-Archetype-e3slopa",
+          "summary": "Юнгианский аналитик Лиза Маркиано и Гэри Кларк, автор книги «Карл Юнг и эволюционные науки», пробуют соединить нейробиологию и юнгианскую мысль: откуда берётся материнский инстинкт и почему с рождением ребёнка незнакомое поведение вдруг кажется естественным."
+        },
+        {
+          "kind": "подкаст",
+          "title": "От комиксов к кушетке: «Сон французской медсестры»",
+          "original": "From Comics to the Couch: 'A French Nurse's Dream'",
+          "source": "Psychoanalysis On and Off the Couch",
+          "date": "2026-11-15",
+          "lang": "en",
+          "url": "https://psychoanalysisonandoffthecouch.libsyn.com/from-comics-to-the-couch-a-french-nurses-dream-with-vera-camden-phd-and-valentino-zullo-phd-lisw-s-cleveland-ohio",
+          "summary": "Вера Камден и Валентино Зулло — о комиксах как психоаналитическом материале. Их тезис: господство образа не обязательно ведёт к упадку, оно может освобождать воображение; комиксы — наследники книжной миниатюры и наскальной живописи."
+        },
+        {
+          "kind": "подкаст",
+          "title": "Кроме «токсичной»: Карл Фиглио о «семенной» маскулинности",
+          "original": "Rethinking the Psychoanalysis of Masculinity: From Toxic to Seminal",
+          "source": "New Books in Psychoanalysis",
+          "date": "2026-11-13",
+          "lang": "en",
+          "url": "https://new-books-in-psychoanalysis.simplecast.com/episodes/rethinking-the-psychoanalysis-of-masculinity-from-toxic-to-seminal-with-karl-figlio-routledge-2023-dmW3Gw_s",
+          "summary": "Интервью с Карлом Фиглио о книге «Переосмысляя психоанализ маскулинности» (Routledge, 2023). Начав с вопроса, почему мужественность так часто называют «токсичной», он описывает другое её измерение, которое называет «семенным»."
+        },
+        {
+          "kind": "видео",
+          "title": "«О себе, о жизни, о психоанализе»: Юлия Бердникова",
+          "source": "ВЕИП, YouTube",
+          "date": "2026-11-19",
+          "lang": "ru",
+          "url": "https://www.youtube.com/watch?v=VsOXrIV4S1M",
+          "summary": "Десятый выпуск цикла биографических интервью к 35-летию ВЕИП: тренинговый аналитик и супервизор Юлия Бердникова — о детстве, выборе пути, ошибках, любви, вере и о том, как психоанализ изменил её саму."
+        },
+        {
+          "kind": "видео",
+          "title": "Что говорит пациенту терапевтическое слушание",
+          "original": "Psychotherapeutic listening with Dr. David Joseph",
+          "source": "APsA, YouTube",
+          "date": "2026-11-16",
+          "lang": "en",
+          "url": "https://www.youtube.com/shorts/1MaUw9USGss",
+          "summary": "Фрагмент 25-го выпуска подкаста «Psychoanalysis & You»: Дэвид Джозеф о том, что само внимательное слушание без слов сообщает пациенту — части тебя, которых ты не осознаёшь, тоже важны."
+        }
+      ]
     }
   ],
-  "post": "<b>Психоанализ за неделю</b>  ·  <i>№ 1, 13–20 ноября</i>\n\n<i>Бион на четырёх континентах, синхрония без иллюзий и суд за здание ВЕИП.</i>\n\n🔬 <b>Наука</b>\n<blockquote expandable><b><a href=\"https://doi.org/10.1080/00332828.2026.2757607\">Бион на четырёх континентах</a></b> — спецномер Psychoanalytic Quarterly о том, как его идеи приживались в Лондоне, Италии, Латинской Америке и Калифорнии.\n\n<b><a href=\"https://doi.org/10.1080/10503307.2026.2745621\">Синхрония: больше — не значит лучше</a></b> — одна и та же согласованность бывает и настройкой, и застреванием в повторении.\n\n<b><a href=\"https://doi.org/10.1002/jclp.70239\">Ментализация в старости</a></b> — низкая почти у всех, и дело, похоже, не только в возрасте, но и в военной травме поколения.\n\n<b><a href=\"https://doi.org/10.1080/15299732.2026.2765347\">Без чего не бывает диссоциации</a></b> — девять необходимых условий, и все про провалы признания, регуляции и ментализации.</blockquote>\n\n🏛 <b>Сообщество</b>\n<blockquote expandable><b><a href=\"https://www.ucl.ac.uk/brain-sciences/news/2026/nov/ucl-psychoanalysis-unit-wins-prestigious-award\">Премия Сигурни</a></b> — у отделения психоанализа UCL, создателей динамической межличностной терапии.\n\n<b><a href=\"https://www.bpc.org.uk/about-us/our-work/psychoanalytic-psychotherapy-now/ppnow-2026/\">PPNow 2026</a></b> — о нарушениях границ в кабинете и в самих институтах.\n\n<b><a href=\"https://psychoanalysis.org.uk/sites/default/files/2026-07/Techno-Transference%20Programme%20%286%29.pdf\">Завтра: «техноперенос»</a></b> — конференция о привязанности и проекции в разговоре с ИИ, можно онлайн.</blockquote>\n\n📍 <b>По-русски</b>\n<blockquote expandable><b><a href=\"https://eeip.ru/novosti/soobshchenie-po-itogam-predvaritelnogo-sudebnogo-zasedaniya-ot-16-11-2026\">ВЕИП</a></b> — суд по зданию перенесён на 18 января, институт работает.\n\n<b><a href=\"https://psyconf.org/\">«Языки психоанализа»</a></b> — 28 ноября онлайн, 4–6 декабря в Стамбуле.</blockquote>\n\n🎞 <b>Культура</b>\n<blockquote expandable><b><a href=\"https://psychoanalysis.org.uk/civicrm-event/1962\">Кинофестиваль «Страсть»</a></b> — европейский психоаналитический фестиваль в Лондоне, в память об Андреа Саббадини.</blockquote>\n\n📖 <b><a href=\"https://chtotonapsy.norevia.workers.dev/issue/2026-11-20\">Все 16 материалов — в журнале</a></b>"
+  "post": "<b>Психоанализ за неделю</b>  ·  <i>№ 1, 13–20 ноября</i>\n\n<i>Бион на четырёх континентах, синхрония без иллюзий и суд за здание ВЕИП.</i>\n\n🔬 <b>Наука</b>\n<blockquote expandable><b><a href=\"https://doi.org/10.1080/00332828.2026.2757607\">Бион на четырёх континентах</a></b> — спецномер Psychoanalytic Quarterly о том, как его идеи приживались в Лондоне, Италии, Латинской Америке и Калифорнии.\n\n<b><a href=\"https://doi.org/10.1080/10503307.2026.2745621\">Синхрония: больше — не значит лучше</a></b> — одна и та же согласованность бывает и настройкой, и застреванием в повторении.\n\n<b><a href=\"https://doi.org/10.1002/jclp.70239\">Ментализация в старости</a></b> — низкая почти у всех, и дело, похоже, не только в возрасте, но и в военной травме поколения.\n\n<b><a href=\"https://doi.org/10.1080/15299732.2026.2765347\">Без чего не бывает диссоциации</a></b> — девять необходимых условий, и все про провалы признания, регуляции и ментализации.</blockquote>\n\n📚 <b>Свежие номера журналов</b>\n<blockquote expandable>За неделю — 45 новых статей в 15 журналах, все со ссылками в журнале канала. Главное:\n\n<b><a href=\"https://doi.org/10.1080/00797308.2026.2730111\">Psychoanalytic Study of the Child</a></b> — новый раздел «Дети, насилие и война»: Украина, Газа, беженцы.\n\n<b><a href=\"https://doi.org/10.1080/07351690.2026.2754007\">Psychoanalytic Inquiry</a></b> — климатическая тревога, «Маленькая жизнь» Янагихары, Палестина.\n\n<b><a href=\"https://doi.org/10.1080/01062301.2026.2762431\">Scandinavian Psychoanalytic Review</a></b> — муми-тролли Туве Янссон и «Тюльпаны» Сильвии Плат.</blockquote>\n\n🏛 <b>Сообщество</b>\n<blockquote expandable><b><a href=\"https://www.ucl.ac.uk/brain-sciences/news/2026/nov/ucl-psychoanalysis-unit-wins-prestigious-award\">Премия Сигурни</a></b> — у отделения психоанализа UCL, создателей динамической межличностной терапии.\n\n<b><a href=\"https://www.bpc.org.uk/about-us/our-work/psychoanalytic-psychotherapy-now/ppnow-2026/\">PPNow 2026</a></b> — о нарушениях границ в кабинете и в самих институтах.\n\n<b><a href=\"https://psychoanalysis.org.uk/sites/default/files/2026-07/Techno-Transference%20Programme%20%286%29.pdf\">Завтра: «техноперенос»</a></b> — конференция о привязанности и проекции в разговоре с ИИ, можно онлайн.</blockquote>\n\n📍 <b>По-русски</b>\n<blockquote expandable><b><a href=\"https://eeip.ru/novosti/soobshchenie-po-itogam-predvaritelnogo-sudebnogo-zasedaniya-ot-16-11-2026\">ВЕИП</a></b> — суд по зданию перенесён на 18 января, институт работает.\n\n<b><a href=\"https://psyconf.org/\">«Языки психоанализа»</a></b> — 28 ноября онлайн, 4–6 декабря в Стамбуле.</blockquote>\n\n🎧 <b>Подкасты и видео</b>\n<blockquote expandable><b><a href=\"https://renderingunconscious.substack.com/p/ru429-lucas-ferraco-nassif-the-contemporary\">Бессознательное устроено как экран</a></b> — Лукас Ферасо Насиф в Rendering Unconscious.\n\n<b><a href=\"https://www.buzzsprout.com/1997449/episodes/20148752\">Сон «Человека-волка»</a></b> — вторая часть разбора Грэма Дэниелса.\n\n<b><a href=\"https://new-books-in-psychoanalysis.simplecast.com/episodes/rethinking-the-psychoanalysis-of-masculinity-from-toxic-to-seminal-with-karl-figlio-routledge-2023-dmW3Gw_s\">Карл Фиглио о маскулинности</a></b> — не только «токсичная».\n\n<b><a href=\"https://www.youtube.com/watch?v=VsOXrIV4S1M\">«О себе, о жизни, о психоанализе»</a></b> — интервью ВЕИП с Юлией Бердниковой.</blockquote>\n\n🎞 <b>Культура</b>\n<blockquote expandable><b><a href=\"https://psychoanalysis.org.uk/civicrm-event/1962\">Кинофестиваль «Страсть»</a></b> — европейский психоаналитический фестиваль в Лондоне, в память об Андреа Саббадини.</blockquote>\n\n📖 <b><a href=\"https://chtotonapsy.norevia.workers.dev/issue/2026-11-20\">Все 23 материала и 45 новых статей — в журнале</a></b>"
 }

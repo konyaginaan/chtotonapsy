@@ -12,8 +12,9 @@ from pathlib import Path
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 W, H = 1280, 720
 MONTHS = "января февраля марта апреля мая июня июля августа сентября октября ноября декабря".split()
-SECTIONS = [("science", "Наука", "#a9b4f5"), ("community", "Сообщество", "#eab0d3"),
-            ("ru", "По-русски", "#f0b496"), ("culture", "Культура", "#93d6c1")]
+SECTIONS = [("science", "Наука", "#a9b4f5"), ("journals", "Журналы", "#e8cd86"),
+            ("community", "Сообщество", "#eab0d3"), ("ru", "По-русски", "#f0b496"),
+            ("media", "Подкасты и видео", "#f4a9b6"), ("culture", "Культура", "#93d6c1")]
 
 
 def period(a, b):
@@ -26,6 +27,8 @@ def period(a, b):
 def page(d, number):
     e = html.escape
     counts = {s["key"]: len(s["items"]) for s in d["sections"]}
+    if "journals" in counts:
+        counts["journals"] = sum(len(i.get("articles", [])) or 1 for s in d["sections"] if s["key"] == "journals" for i in s["items"])
     chips = "".join(
         f'<span class="chip"><i style="background:{c}"></i>{name} · {counts[k]}</span>'
         for k, name, c in SECTIONS if counts.get(k))
@@ -46,7 +49,7 @@ h1{{font:500 {size}px/1.02 "Cormorant Garamond",serif;margin-top:14px;max-width:
 .foot{{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;gap:24px}}
 .no{{font-weight:700;font-size:22px;letter-spacing:.04em}}
 .no b{{display:block;font:500 64px/1 "Cormorant Garamond",serif;letter-spacing:0;margin-bottom:6px}}
-.chips{{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}}
+.chips{{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;max-width:820px}}
 .chip{{font-weight:600;font-size:18px;padding:10px 16px;border-radius:99px;background:rgba(255,235,247,.1);
   border:1px solid rgba(255,225,242,.2);display:inline-flex;align-items:center;gap:9px}}
 .chip i{{width:9px;height:9px;border-radius:50%;display:inline-block}}

@@ -1,0 +1,234 @@
+{
+  "_": "Источники, которые tools/collect.py проходит каждую неделю. Журналы — по ISSN через Crossref (новые DOI за период), подкасты — RSS, YouTube — RSS канала. Добавлять сюда; проверено 20.11.2026.",
+  "journals": [
+    {
+      "name": "The International Journal of Psychoanalysis",
+      "issn": "0020-7578"
+    },
+    {
+      "name": "Journal of the American Psychoanalytic Association",
+      "issn": "0003-0651"
+    },
+    {
+      "name": "The Psychoanalytic Quarterly",
+      "issn": "0033-2828"
+    },
+    {
+      "name": "Psychoanalytic Dialogues",
+      "issn": "1048-1885"
+    },
+    {
+      "name": "Psychoanalytic Inquiry",
+      "issn": "0735-1690"
+    },
+    {
+      "name": "Contemporary Psychoanalysis",
+      "issn": "0010-7530"
+    },
+    {
+      "name": "Psychoanalytic Psychology",
+      "issn": "0736-9735"
+    },
+    {
+      "name": "The American Journal of Psychoanalysis",
+      "issn": "0002-9548"
+    },
+    {
+      "name": "The Psychoanalytic Review",
+      "issn": "0033-2836"
+    },
+    {
+      "name": "International Forum of Psychoanalysis",
+      "issn": "0803-706X"
+    },
+    {
+      "name": "The Scandinavian Psychoanalytic Review",
+      "issn": "0106-2301"
+    },
+    {
+      "name": "Psychoanalysis, Self and Context",
+      "issn": "2472-0038"
+    },
+    {
+      "name": "Psychoanalytic Perspectives",
+      "issn": "1551-806X"
+    },
+    {
+      "name": "Psychoanalytic Psychotherapy",
+      "issn": "0266-8734"
+    },
+    {
+      "name": "British Journal of Psychotherapy",
+      "issn": "0265-9883"
+    },
+    {
+      "name": "Psychodynamic Practice",
+      "issn": "1475-3634"
+    },
+    {
+      "name": "Psychodynamic Psychiatry",
+      "issn": "2162-2590"
+    },
+    {
+      "name": "Neuropsychoanalysis",
+      "issn": "1529-4145"
+    },
+    {
+      "name": "The Psychoanalytic Study of the Child",
+      "issn": "0079-7308"
+    },
+    {
+      "name": "Journal of Child Psychotherapy",
+      "issn": "0075-417X"
+    },
+    {
+      "name": "Journal of Infant, Child, and Adolescent Psychotherapy",
+      "issn": "1528-9168"
+    },
+    {
+      "name": "Psychoanalysis, Culture & Society",
+      "issn": "1088-0763"
+    },
+    {
+      "name": "International Journal of Applied Psychoanalytic Studies",
+      "issn": "1742-3341"
+    },
+    {
+      "name": "Psychoanalysis and History",
+      "issn": "1460-8235"
+    },
+    {
+      "name": "Studies in Gender and Sexuality",
+      "issn": "1524-0657"
+    },
+    {
+      "name": "Psychoanalytic Social Work",
+      "issn": "1522-8878"
+    },
+    {
+      "name": "Couple and Family Psychoanalysis",
+      "issn": "2044-4133"
+    },
+    {
+      "name": "Attachment: New Directions in Psychotherapy and Relational Psychoanalysis",
+      "issn": "1753-5980"
+    },
+    {
+      "name": "Journal of Analytical Psychology",
+      "issn": "0021-8774"
+    },
+    {
+      "name": "Revue française de psychanalyse",
+      "issn": "0035-2942"
+    },
+    {
+      "name": "Psyche",
+      "issn": "0033-2623"
+    },
+    {
+      "name": "Консультативная психология и психотерапия",
+      "issn": "2075-3470",
+      "filter": true
+    }
+  ],
+  "podcasts": [
+    {
+      "name": "Talks On Psychoanalysis (IPA)",
+      "rss": "https://feed.podbean.com/talksonpsychoanalysis/feed.xml"
+    },
+    {
+      "name": "Psychoanalysis On and Off the Couch",
+      "rss": "https://rss.libsyn.com/shows/184931/destinations/1270163.xml"
+    },
+    {
+      "name": "New Books in Psychoanalysis",
+      "rss": "https://feeds.simplecast.com/xACTNTX5"
+    },
+    {
+      "name": "Psychoanalysis & You (APsA)",
+      "rss": "https://feeds.resonaterecordings.com/psychoanalysis-you"
+    },
+    {
+      "name": "Freud Museum London",
+      "rss": "https://feed.podbean.com/thefreudmuseum/feed.xml"
+    },
+    {
+      "name": "Rendering Unconscious",
+      "rss": "https://feeds.soundcloud.com/users/soundcloud:users:54168442/sounds.rss"
+    },
+    {
+      "name": "Three Associating",
+      "rss": "https://anchor.fm/s/5128ac20/podcast/rss"
+    },
+    {
+      "name": "Psychoanalytic Thinking with Don Carveth",
+      "rss": "https://rss.libsyn.com/shows/362141/destinations/2971637.xml"
+    },
+    {
+      "name": "Lectures on Lacan",
+      "rss": "https://api.substack.com/feed/podcast/888295.rss"
+    },
+    {
+      "name": "Current Psychoanalysis (Mark Kinet)",
+      "rss": "https://anchor.fm/s/103a8b73c/podcast/rss"
+    },
+    {
+      "name": "Psychoanalysis and Addiction",
+      "rss": "https://rss.buzzsprout.com/1997449.rss"
+    },
+    {
+      "name": "Little Hysterics (Chicago Center for Psychoanalysis)",
+      "rss": "https://feeds.transistor.fm/little-hysterics"
+    },
+    {
+      "name": "Žižek and so on",
+      "rss": "https://anchor.fm/s/1363ff34/podcast/rss"
+    },
+    {
+      "name": "This Jungian Life",
+      "rss": "https://anchor.fm/s/fc8f2a44/podcast/rss"
+    },
+    {
+      "name": "Speaking of Jung",
+      "rss": "https://speakingofjung.squarespace.com/podcast?format=rss"
+    },
+    {
+      "name": "Это бессознательно (Лакан в Москве)",
+      "rss": "https://cloud.mave.digital/62057"
+    },
+    {
+      "name": "Смерть, Фрейд и Супер-Эго",
+      "rss": "https://cloud.mave.digital/63051"
+    },
+    {
+      "name": "Оговорочка по Фрейду",
+      "rss": "https://podster.fm/rss.xml?pid=92098"
+    }
+  ],
+  "youtube": [
+    {
+      "name": "International Psychoanalytical Association",
+      "channel": "UCWR3R3lkUxb7agVNkAkopmw"
+    },
+    {
+      "name": "American Psychoanalytic Association",
+      "channel": "UCgKlmD-PvTBKGM_jecyfg5w"
+    },
+    {
+      "name": "Anna Freud",
+      "channel": "UCN8HoTxrHO8RJdoB4isH0lA"
+    },
+    {
+      "name": "ВЕИП (Институт психоанализа)",
+      "channel": "UC4PFI1oUYK6M0mUfzFflNLw"
+    },
+    {
+      "name": "Московский институт психоанализа",
+      "channel": "UCBykqDFaVt0xkpWsAnRELAw"
+    },
+    {
+      "name": "Институт практической психологии и психоанализа",
+      "channel": "UCnFxQR2_t0-EmT833EVbESg"
+    }
+  ]
+}
