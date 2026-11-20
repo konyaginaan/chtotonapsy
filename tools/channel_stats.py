@@ -79,6 +79,11 @@ def kind(p):
     return "личное и прочее"
 
 
+def fmt(x):
+    """9.0 → 9, 393.5 → 393,5 — по-русски и без лишних нулей."""
+    return str(int(x)) if float(x).is_integer() else str(x).replace(".", ",")
+
+
 def first_line(t, n=90):
     t = re.sub(r"\s+", " ", t).strip().replace("|", "/")
     return (t[:n].rsplit(" ", 1)[0] + "…") if len(t) > n else (t or "—")
@@ -96,22 +101,28 @@ def main():
         for p in posts)
     (base / "История постов.md").write_text(f"""---
 обновлено: {today}
+cssclasses: [klodik]
 ---
 # История постов @{CH}
 
-Все публичные посты канала, свежие сверху. Обновляется скриптом `tools/channel_stats.py` (проект chtotonapsy), обычно по пятницам. Пересылки публично не видны — только просмотры и реакции. Разбор цифр — в срезах: [[Канал — хаб]].
+> [!цифры] {len(posts)} постов · обновлено {today}
+> Свежие сверху. Обновляется скриптом `tools/channel_stats.py` (проект chtotonapsy), обычно по пятницам. Пересылки публично не видны, есть только просмотры и реакции. Разбор цифр — в срезах, см. [[Канал — хаб]].
 
 | Пост | Дата | Тип | Просмотры | Реакции | Начало текста |
 |---|---|---|---|---|---|
 {rows}
 """, encoding="utf-8")
 
+    # Сырые цифры всех срезов; повторный запуск в тот же день заменяет строки этого дня.
     csv_path = base / "Данные" / "срезы.csv"
-    new = not csv_path.exists()
-    with csv_path.open("a", newline="", encoding="utf-8") as f:
+    old = []
+    if csv_path.exists():
+        with csv_path.open(encoding="utf-8") as f:
+            old = [r for r in csv.reader(f)][1:]
+    with csv_path.open("w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
-        if new:
-            w.writerow(["срез", "пост", "дата", "тип", "просмотры", "реакции"])
+        w.writerow(["срез", "пост", "дата", "тип", "просмотры", "реакции"])
+        w.writerows(r for r in old if r and r[0] != today)
         for p in posts:
             w.writerow([today, p["id"], p["date"], kind(p), p["views"], p["react"]])
 
@@ -121,45 +132,80 @@ def main():
     for p in recent:
         by[kind(p)].append(p)
     types = "\n".join(
-        f"| {k} | {len(v)} | {st.median([p['react'] for p in v])} | {max(p['react'] for p in v)} | {st.median([p['views'] for p in v])} | {round(100 * sum(p['react'] for p in v) / max(1, sum(p['views'] for p in v)), 1)} |"
+        f"| {k} | {len(v)} | {fmt(st.median([p['react'] for p in v]))} | {max(p['react'] for p in v)} | {fmt(st.median([p['views'] for p in v]))} | {fmt(round(100 * sum(p['react'] for p in v) / max(1, sum(p['views'] for p in v)), 1))} |"
         for k, v in sorted(by.items(), key=lambda kv: -st.median([p["react"] for p in kv[1]])))
     wd = defaultdict(list)
     for p in recent:
         wd[datetime.date.fromisoformat(p["date"]).weekday()].append(p["react"])
-    days = " · ".join(f"{DAYS[d]} {st.median(wd[d])} ({len(wd[d])})" for d in range(7) if wd[d])
+    days = " · ".join(f"{DAYS[d]} — {len(wd[d])}" for d in range(7) if wd[d])
     top = lambda key, n=10: "\n".join(
         f"| [{p['id']}](https://t.me/{CH}/{p['id']}) | {p['date']} | {kind(p)} | {p['views']} | {p['react']} | {first_line(p['text'], 70)} |"
         for p in sorted(recent, key=lambda p: -p[key])[:n])
-    med_r = st.median([p["react"] for p in recent]) if recent else 0
-    med_v = st.median([p["views"] for p in recent]) if recent else 0
+    med_r = fmt(st.median([p["react"] for p in recent])) if recent else 0
+    med_v = fmt(st.median([p["views"] for p in recent])) if recent else 0
+    order = sorted(by.items(), key=lambda kv: -st.median([p["react"] for p in kv[1]]))
+    bars = ", ".join(f'"{k}"' for k, _ in order)
+    vals = ", ".join(str(st.median([p["react"] for p in v])) for _, v in order)
+    pie = "\n".join(f'    "{k}" : {sum(p["react"] for p in v)}' for k, v in order)
+    dvals = ", ".join(str(st.median(wd[d]) if wd[d] else 0) for d in range(7))
+    best = order[0][0] if order else "—"
     (base / "Аналитика" / f"Срез {today}.md").write_text(f"""---
 дата: {today}
-период: последние 12 месяцев ({len(recent)} постов)
+период: последние 12 месяцев
+постов: {len(recent)}
+cssclasses: [klodik]
 ---
-# Срез аналитики {today}
+# Срез аналитики · {today}
 
-Обычный пост: **{med_r}** реакций и **{med_v}** просмотров (медианы за год). Всего публичных постов: {len(posts)}.
+> [!цифры] Коротко
+> - Обычный пост: **{med_r}** реакций и **{med_v}** просмотров (медианы за 12 месяцев, {len(recent)} постов).
+> - Всего публичных постов в канале: **{len(posts)}**.
+> - Лучше всего работает тип «**{best}**».
 
-## По типам постов
+## Реакции по типам постов
+```mermaid
+xychart-beta
+  title "Медиана реакций на пост"
+  x-axis [{bars}]
+  y-axis "реакции"
+  bar [{vals}]
+```
+
+```mermaid
+pie showData
+  title Все реакции за год по типам
+{pie}
+```
+
 | Тип | Постов | Медиана реакций | Максимум | Медиана просмотров | Реакций на 100 просмотров |
 |---|---|---|---|---|---|
 {types}
 
-## По дням недели
-Медиана реакций (в скобках — число постов): {days}
+## Дни недели
+```mermaid
+xychart-beta
+  title "Медиана реакций по дням публикации"
+  x-axis [пн, вт, ср, чт, пт, сб, вс]
+  y-axis "реакции"
+  bar [{dvals}]
+```
+Число постов по дням: {days}
 
 ## Больше всего реакций
 | Пост | Дата | Тип | Просмотры | Реакции | Начало |
 |---|---|---|---|---|---|
 {top('react')}
 
-## Больше всего просмотров (вероятно, пересылали)
+## Больше всего просмотров
+Скорее всего, эти посты пересылали.
+
 | Пост | Дата | Тип | Просмотры | Реакции | Начало |
 |---|---|---|---|---|---|
 {top('views')}
 
 ## Выводы
-_Дописываются поверх цифр._
+> [!вывод] Что говорят цифры
+> _Дописывается поверх цифр._
 """, encoding="utf-8")
     print(f"{len(posts)} постов, срез {today} → {base}")
 
