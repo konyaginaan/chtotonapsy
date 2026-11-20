@@ -284,6 +284,26 @@ const WAVES = `<div class="fade" aria-hidden="true"></div>`;
 
 // env.PUBLIC_URL — постоянный адрес журнала (GitHub Pages); на воркере страницы закрыты от
 // индексации (NOINDEX), чтобы поисковики не видели два одинаковых сайта.
+// Яндекс Метрика и цели: открыли пересказ, развернули раздел, ушли к первоисточнику, в канал.
+// Цели с такими идентификаторами заведены в интерфейсе Метрики (JavaScript-события).
+const metrika = (id) => `<script>
+(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();
+for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r)return;}
+k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+(window,document,"script","https://mc.yandex.ru/metrika/tag.js","ym");
+ym(${id},"init",{clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor:true});
+(function(){
+  function goal(g,p){ try{ ym(${id},"reachGoal",g,p); }catch(e){} }
+  document.addEventListener("click",function(e){
+    var r=e.target.closest("[data-r]"); if(r) return goal("retelling",{uid:r.dataset.r});
+    var a=e.target.closest("a[href]"); if(!a) return;
+    if(/t\.me\//.test(a.href)) return goal("telegram");
+    if(a.closest(".item h3, .arts, .nf")) goal("source",{url:a.href});
+  });
+  document.addEventListener("toggle",function(e){ if(e.target.matches&&e.target.matches("details.sec")&&e.target.open) goal("section",{key:e.target.id}); },true);
+})();
+</script><noscript><div><img src="https://mc.yandex.ru/watch/${id}" style="position:absolute;left:-9999px" alt=""></div></noscript>`;
+
 function layout({ title, description, body, env, path = "/", image, noindex, ld, onHero }) {
   const ch = env.CHANNEL.replace(/^@/, "");
   return `<!doctype html><html lang="ru"><head><meta charset="utf-8">
@@ -326,6 +346,7 @@ ${body}
   if(location.hash.indexOf('#r-')===0) open(location.hash.slice(3),false);
 })();
 </script>
+${env.METRIKA_ID && !env.NOINDEX ? metrika(env.METRIKA_ID) : ""}
 <footer class="foot">${WAVES}<div class="wrap"><div class="ems">${ORDER.map((k) => `<img src="${em(k)}" alt="" loading="lazy">`).join("")}</div>«Психоанализ за неделю» — еженедельный обзор канала <a href="https://t.me/${esc(ch)}">@${esc(ch)}</a>.<br>Каждый материал ведёт на первоисточник; англоязычные — с пересказом по-русски.</div></footer>
 </body></html>`;
 }
