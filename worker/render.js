@@ -38,6 +38,11 @@ const plural = (n, one, few, many) => {
 const countItems = (issue) => issue.sections.reduce((n, s) => n + s.items.length, 0);
 const sorted = (sections) =>
   ORDER.map((k) => sections.find((s) => s.key === k)).filter((s) => s && s.items.length);
+// [{it, key, uid}] в порядке показа; uid = <выпуск>-<номер> — по нему открывается пересказ (#r-uid).
+const flat = (issue) => {
+  let n = 0;
+  return sorted(issue.sections).flatMap((s) => s.items.map((it) => ({ it, key: s.key, uid: `${issue.id}-${++n}` })));
+};
 
 const FONTS = "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=Manrope:wght@500;600;700&display=swap";
 
@@ -162,6 +167,30 @@ aside .sticky{position:sticky;top:24px}
 .foot{border-top:1px solid var(--rule);padding:28px 0 40px;font:500 13px/1.6 Manrope,system-ui,sans-serif;color:var(--faint);text-align:center}
 .foot a{color:var(--muted)}
 
+/* заметка-пересказ */
+.rt{margin-top:12px;font:700 12.5px/1 Manrope,system-ui,sans-serif;color:var(--accent);background:var(--soft);
+  border:1px solid transparent;border-radius:99px;padding:9px 14px 9px 12px;cursor:pointer;display:inline-flex;gap:7px;align-items:center}
+.rt:hover{border-color:var(--accent)}
+.rt svg{width:14px;height:14px}
+dialog.note{border:0;padding:0;width:min(680px,calc(100% - 32px));max-width:none;max-height:min(86vh,920px);
+  border-radius:20px;background:var(--paper);color:var(--ink);box-shadow:0 30px 90px rgba(30,10,30,.35);overflow:hidden}
+dialog.note[open]{display:flex;flex-direction:column;animation:pop .22s ease-out}
+dialog.note::backdrop{background:rgba(28,14,30,.5);backdrop-filter:blur(3px)}
+@keyframes pop{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.ns{overflow:auto;padding:34px 40px 30px;overscroll-behavior:contain}
+.nx{position:absolute;top:14px;right:14px;width:38px;height:38px;border-radius:50%;border:1px solid var(--rule);
+  background:var(--paper);color:var(--muted);font:400 22px/1 Manrope,sans-serif;cursor:pointer;z-index:1}
+.nx:hover{color:var(--accent);border-color:var(--accent)}
+.note .over{padding-right:40px}
+.note h3{font-size:31px;margin:10px 0 8px;font-weight:600}
+.note .orig{font-style:italic;color:var(--muted);font-size:15px;margin:0 0 18px}
+.note .nb p{margin:0 0 14px;font-size:17px;line-height:1.7}
+.note .nb p:first-child::first-letter{font:600 3.1em/.8 "Cormorant Garamond",serif;float:left;margin:6px 8px 0 0;color:var(--accent)}
+.nf{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 16px;align-items:center;border-top:1px solid var(--rule);
+  margin-top:10px;padding-top:16px;font:600 12.5px/1.4 Manrope,system-ui,sans-serif;color:var(--faint)}
+.nf a{color:var(--accent);text-decoration:none}
+.nf a:hover{text-decoration:underline}
+
 @media (max-width:900px){
   .grid{grid-template-columns:1fr;gap:48px}
   aside{order:-1}
@@ -179,7 +208,12 @@ aside .sticky{position:sticky;top:24px}
   .inav{grid-template-columns:1fr}
   .inav .r{grid-column:1}
   .tg span{display:none}
+  dialog.note{width:100%;margin:auto 0 0;border-radius:20px 20px 0 0;max-height:90vh}
+  dialog.note[open]{animation:up .25s ease-out}
+  .ns{padding:28px 22px 26px}
+  .note h3{font-size:26px}
 }
+@keyframes up{from{transform:translateY(40px);opacity:.4}to{transform:none;opacity:1}}
 `;
 
 function layout({ title, description, body, env, path = "/", image }) {
@@ -202,11 +236,42 @@ ${image ? `<meta property="og:image" content="${esc(image)}"><meta name="twitter
 <a class="tg" href="https://t.me/${esc(ch)}">✈︎ <span>Канал в Telegram</span></a>
 </div></header>
 ${body}
+<dialog class="note" id="note" aria-label="Пересказ"><button class="nx" aria-label="Закрыть">×</button><div class="ns"></div></dialog>
+<script>
+(function(){
+  var d=document.getElementById('note'), box=d.querySelector('.ns');
+  function open(id,mark){
+    var t=document.getElementById('t-'+id); if(!t) return;
+    box.replaceChildren(t.content.cloneNode(true)); box.scrollTop=0;
+    if(!d.open) d.showModal();
+    if(mark) history.replaceState(null,'','#r-'+id);
+  }
+  document.addEventListener('click',function(e){var b=e.target.closest('[data-r]'); if(b) open(b.dataset.r,true);});
+  d.querySelector('.nx').addEventListener('click',function(){d.close();});
+  d.addEventListener('click',function(e){if(e.target===d) d.close();});
+  d.addEventListener('close',function(){if(location.hash.indexOf('#r-')===0) history.replaceState(null,'',location.pathname+location.search);});
+  if(location.hash.indexOf('#r-')===0) open(location.hash.slice(3),false);
+})();
+</script>
 <footer class="foot"><div class="wrap">Еженедельный обзор канала <a href="https://t.me/${esc(ch)}">@${esc(ch)}</a>. Каждый материал ведёт на первоисточник.</div></footer>
 </body></html>`;
 }
 
-function itemHtml(it, key, issue) {
+const BOOK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2z"/><path d="M22 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"/></svg>';
+
+// Пересказ живёт в <template> рядом с материалом и открывается в общем окне — без отдельных страниц.
+function retellingHtml(it, key, uid, meta) {
+  const paras = String(it.retelling).split(/\n\s*\n/).map((p) => `<p>${esc(p.trim())}</p>`).join("");
+  return `<template id="t-${uid}"><div style="--c:var(--${key})">
+<div class="meta">${meta}</div>
+<h3>${esc(it.title)}</h3>
+${it.original || it.authors ? `<p class="orig">${[it.authors, it.original && `«${it.original}»`].filter(Boolean).map(esc).join(" · ")}</p>` : ""}
+<div class="nb">${paras}</div>
+<div class="nf"><span>Пересказ по ${esc(it.retelling_basis || "аннотации")}</span><a href="${safeUrl(it.url)}" target="_blank" rel="noopener">Оригинал ↗</a></div>
+</div></template>`;
+}
+
+function itemHtml(it, key, issue, uid, showFrom) {
   const meta = [
     `<span class="kind"><span class="dot"></span>${esc(it.kind || SECTIONS[key].short)}</span>`,
     it.source && `<span>${esc(it.source)}</span>`,
@@ -219,7 +284,8 @@ function itemHtml(it, key, issue) {
 <h3><a href="${safeUrl(it.url)}" target="_blank" rel="noopener">${esc(it.title)}<span class="ext">↗</span></a></h3>
 ${it.authors || it.original ? `<p class="authors">${[it.authors, it.original && `«${it.original}»`].filter(Boolean).map(esc).join(" · ")}</p>` : ""}
 ${it.summary ? `<p class="sum">${esc(it.summary)}</p>` : ""}
-${issue ? `<a class="from" href="/issue/${esc(issue.id)}">из выпуска № ${issue.number} · ${esc(period(issue.period_from, issue.period_to))}</a>` : ""}
+${it.retelling ? `<button class="rt" data-r="${esc(uid)}">${BOOK}Пересказ по-русски</button>${retellingHtml(it, key, uid, meta)}` : ""}
+${showFrom ? `<a class="from" href="/issue/${esc(issue.id)}">из выпуска № ${issue.number} · ${esc(period(issue.period_from, issue.period_to))}</a>` : ""}
 </article>`;
 }
 
@@ -238,11 +304,10 @@ export function renderIndex(issues, env) {
 </div></section>` : `<section class="wrap"><div class="feat"><div><div class="over">Скоро</div>
 <h2>Первый выпуск готовится</h2><p class="lead">Каждую пятницу здесь будет появляться обзор недели: новые исследования, новости психоаналитического сообщества, книги, события и культура.</p></div></div></section>`;
 
-  const items = issues.flatMap((is) =>
-    sorted(is.sections).flatMap((s) => s.items.map((it) => ({ it, key: s.key, is }))));
-  const list = items.map(({ it, key, is }) => {
-    const text = [it.title, it.summary, it.source, it.authors, it.kind].join(" ").toLowerCase();
-    return `<div class="row" data-s="${key}" data-q="${esc(text)}">${itemHtml(it, key, is)}</div>`;
+  const items = issues.flatMap((is) => flat(is).map((x) => ({ ...x, is })));
+  const list = items.map(({ it, key, is, uid }) => {
+    const text = [it.title, it.summary, it.source, it.authors, it.kind, it.original].join(" ").toLowerCase();
+    return `<div class="row" data-s="${key}" data-q="${esc(text)}">${itemHtml(it, key, is, uid, true)}</div>`;
   }).join("");
 
   const filters = ORDER.map((k) =>
@@ -299,6 +364,7 @@ ${items.length ? `<div class="tools"><input class="search" type="search" placeho
 export function renderIssue(issue, { prev, next }, env) {
   const secs = sorted(issue.sections);
   const n = countItems(issue);
+  const uids = new Map(flat(issue).map((x) => [x.it, x.uid]));
   const body = `
 ${issue.status === "draft" ? `<div class="draft">Черновик — ещё не опубликован в канале</div>` : ""}
 <div class="wrap">
@@ -313,7 +379,7 @@ ${issue.lead ? `<p class="lead">${esc(issue.lead)}</p>` : ""}
 <div class="body">
 ${secs.map((s) => `<section class="sec" id="${s.key}" style="--c:var(--${s.key})">
 <div class="sec-h"><span class="sec-mark"></span><h2>${esc(SECTIONS[s.key].title)}</h2><span class="rule"></span><span class="cnt">${s.items.length}</span></div>
-${s.items.map((it) => itemHtml(it, s.key)).join("")}
+${s.items.map((it) => itemHtml(it, s.key, issue, uids.get(it), false)).join("")}
 </section>`).join("")}
 </div>
 ${prev || next ? `<nav class="inav">
