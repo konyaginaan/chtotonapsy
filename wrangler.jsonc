@@ -13,7 +13,7 @@
     "GITHUB_REPO": "konyaginaan/chtotonapsy",
     // Коды подтверждения прав из Google Search Console и Яндекс.Вебмастера (метатег).
     "GOOGLE_VERIFY": "",
-    "YANDEX_VERIFY": "",
+    "YANDEX_VERIFY": "0fee8d569b10f08d",
     "CHANNEL": "@chtotonapsy",
     // Кому бот присылает черновики и напоминания; только этот человек может нажать «Опубликовать».
     "OWNER_ID": "400206093"
