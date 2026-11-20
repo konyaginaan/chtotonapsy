@@ -294,5 +294,8 @@ async function setup(env, url) {
     url: ours, secret_token: env.WEBHOOK_SECRET, allowed_updates: ["callback_query"],
   });
   const me = await tg(env, "getMe", {});
-  return json({ changed: set.ok, previous: current || null, bot: me.result && me.result.username });
+  const member = me.ok ? await tg(env, "getChatMember", { chat_id: env.CHANNEL, user_id: me.result.id }) : {};
+  const m = member.result || {};
+  return json({ changed: set.ok, previous: current || null, bot: me.result && me.result.username,
+    channel: { status: m.status || member.description, can_post: m.can_post_messages ?? null } });
 }
