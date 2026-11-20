@@ -10,7 +10,7 @@ on:
     - cron: "23 * * * *"
   push:
     branches: [main]
-    paths: [tools/build_pages.py, .github/workflows/pages.yml]
+    paths: [tools/build_pages.py, .github/workflows/pages.yml, public/**]
 
 permissions:
   contents: read
