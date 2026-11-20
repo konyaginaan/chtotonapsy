@@ -1,0 +1,24 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "chtotonapsy",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-09-01",
+  "vars": {
+    // Нужен расписанию и подписям к постам: у cron нет запроса, из которого виден адрес.
+    "SITE_URL": "https://chtotonapsy.norevia.workers.dev",
+    "CHANNEL": "@chtotonapsy",
+    // Кому бот присылает черновики и напоминания; только этот человек может нажать «Опубликовать».
+    "OWNER_ID": "400206093"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "chtotonapsy",
+      "database_id": "009bd1c3-318b-453b-8aa1-5210d01f5191",
+      "migrations_dir": "migrations"
+    }
+  ],
+  // Каждый час по пятницам и субботам (UTC); пора ли напоминать — решает код по времени Кипра.
+  "triggers": { "crons": ["0 * * * 5,6"] },
+  "observability": { "enabled": true }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "chtotonapsy",
+  "version": "1.0.0",
+  "description": "Еженедельный обзор психоанализа для канала @chtotonapsy: журнал выпусков, черновик в личку с кнопкой «Опубликовать», напоминания",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "db:local": "wrangler d1 migrations apply chtotonapsy --local",
+    "test": "node --test test/*.test.mjs",
+    "deploy": "wrangler d1 migrations apply chtotonapsy --remote && wrangler deploy",
+    "predeploy": "npm test"
+  },
+  "devDependencies": {
+    "wrangler": "^4.131.1"
+  }
+}

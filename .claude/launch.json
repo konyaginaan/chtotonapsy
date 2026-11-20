@@ -1,0 +1,3 @@
+{ "version": "0.0.1", "configurations": [
+  { "name": "chtotonapsy", "runtimeExecutable": "npx", "runtimeArgs": ["wrangler", "dev", "--port", "8796"], "port": 8796 }
+] }
