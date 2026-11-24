@@ -46,6 +46,7 @@ export default {
     try {
       if (p === "/webhook" && request.method === "POST") return await webhook(request, env);
       if (p === "/api/draft" && request.method === "POST") return await postDraft(request, env);
+      if (p === "/api/post" && request.method === "POST") return await postSingle(request, env);
       if (p === "/api/latest") return await latest(env);
       if (p === "/api/update-published" && request.method === "POST") return await updatePublished(request, env);
       if (p === "/api/preview" && request.method === "POST") return await preview(request, env);
@@ -314,6 +315,8 @@ async function webhook(request, env) {
   const answer = (text) => tg(env, "answerCallbackQuery", { callback_query_id: cq.id, text });
 
   if (String(cq.from.id) !== String(env.OWNER_ID)) { await answer("Нет доступа"); return new Response("ok"); }
+  const sp = /^(ppub|prej):([a-z0-9-]{1,40})$/.exec(cq.data || "");
+  if (sp) return await singleCallback(env, cq, sp[1], sp[2], answer);
   const m = /^(pub|rej):(\d{4}-\d{2}-\d{2})$/.exec(cq.data || "");
   if (!m) { await answer(""); return new Response("ok"); }
   const [, action, id] = m;
@@ -424,4 +427,64 @@ async function setup(env, url) {
   const m = member.result || {};
   return json({ changed: set.ok, previous: current || null, bot: me.result && me.result.username,
     channel: { status: m.status || member.description, can_post: m.can_post_messages ?? null } });
+}
+
+// ---------- Отдельные посты (не выпуски обзора) ----------
+// Черновик хранится в meta под ключом post:<slug>; публикует только владелица кнопкой в боте.
+
+async function postSingle(request, env) {
+  if (!authorized(request, env)) return json({ error: "unauthorized" }, 401);
+  const d = await request.json();
+  if (!/^[a-z0-9-]{1,40}$/.test(d.slug || "") || typeof d.text !== "string" || !d.text.trim() || d.text.length > 4000)
+    return json({ error: "invalid: slug [a-z0-9-], text до 4000 знаков" }, 400);
+  const key = `post:${d.slug}`;
+  const old = await env.DB.prepare("SELECT value FROM meta WHERE key = ?").bind(key).first();
+  const prev = old ? JSON.parse(old.value) : null;
+  if (prev && prev.status === "published") return json({ error: "already_published" }, 409);
+  if (prev && prev.draft_msg_id)
+    await tg(env, "editMessageReplyMarkup", { chat_id: env.OWNER_ID, message_id: prev.draft_msg_id, reply_markup: { inline_keyboard: [] } });
+  await tg(env, "sendMessage", { chat_id: env.OWNER_ID, text: "📝 Черновик поста для канала. Ниже текст как он будет выглядеть:" });
+  const sent = await tg(env, "sendMessage", {
+    chat_id: env.OWNER_ID, text: d.text, parse_mode: "HTML", link_preview_options: { is_disabled: true },
+    reply_markup: { inline_keyboard: [[{ text: "✅ Опубликовать", callback_data: `ppub:${d.slug}` },
+                                      { text: "✖️ Отклонить", callback_data: `prej:${d.slug}` }]] },
+  });
+  if (!sent.ok) return json({ error: "telegram", details: sent.description }, 502);
+  const v = { text: d.text, status: "draft", draft_msg_id: sent.result.message_id };
+  await env.DB.prepare("INSERT INTO meta (key, value) VALUES (?1, ?2) ON CONFLICT(key) DO UPDATE SET value = ?2")
+    .bind(key, JSON.stringify(v)).run();
+  return json({ ok: true, draft_msg_id: v.draft_msg_id });
+}
+
+async function singleCallback(env, cq, action, slug, answer) {
+  const key = `post:${slug}`;
+  const row = await env.DB.prepare("SELECT value FROM meta WHERE key = ?").bind(key).first();
+  const msg = cq.message;
+  const drop = () => msg && tg(env, "editMessageReplyMarkup",
+    { chat_id: env.OWNER_ID, message_id: msg.message_id, reply_markup: { inline_keyboard: [] } });
+  const v = row ? JSON.parse(row.value) : null;
+  if (!v || (msg && v.draft_msg_id !== msg.message_id)) { await answer("Этот черновик устарел"); await drop(); return new Response("ok"); }
+  if (v.status !== "draft") { await answer("Уже обработан"); await drop(); return new Response("ok"); }
+  const save = (nv) => env.DB.prepare("UPDATE meta SET value = ?2 WHERE key = ?1 AND value = ?3")
+    .bind(key, JSON.stringify(nv), row.value).run();
+  if (action === "prej") {
+    await save({ ...v, status: "rejected" }); await answer("Отклонено"); await drop(); return new Response("ok");
+  }
+  const locked = { ...v, status: "published" };
+  const lock = await save(locked);
+  if (!lock.meta.changes) { await answer("Уже публикуется"); return new Response("ok"); }
+  const sent = await tg(env, "sendMessage", { chat_id: env.CHANNEL, text: v.text, parse_mode: "HTML",
+    link_preview_options: { is_disabled: true } });
+  if (!sent.ok) {
+    await env.DB.prepare("UPDATE meta SET value = ?2 WHERE key = ?1").bind(key, row.value).run();
+    await answer("Telegram не принял пост");
+    await tg(env, "sendMessage", { chat_id: env.OWNER_ID, text: `Не получилось опубликовать: ${sent.description}` });
+    return new Response("ok");
+  }
+  await env.DB.prepare("UPDATE meta SET value = ?2 WHERE key = ?1")
+    .bind(key, JSON.stringify({ ...locked, channel_msg_id: sent.result.message_id })).run();
+  await answer("Опубликовано"); await drop();
+  await tg(env, "sendMessage", { chat_id: env.OWNER_ID,
+    text: `✅ Опубликовано: https://t.me/${env.CHANNEL.replace(/^@/, "")}/${sent.result.message_id}`, link_preview_options: { is_disabled: true } });
+  return new Response("ok");
 }
