@@ -12,7 +12,7 @@ from pathlib import Path
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 W, H = 1280, 720
 MONTHS = "января февраля марта апреля мая июня июля августа сентября октября ноября декабря".split()
-SECTIONS = [("science", "Наука", "#8fd0cd"), ("journals", "Журналы", "#e6c27a"),
+SECTIONS = [("science", "Наука", "#8fd0cd"), ("neuro", "Мозг и психика", "#c3b3e6"), ("journals", "Журналы", "#e6c27a"),
             ("community", "Сообщество", "#f0a37c"), ("ru", "По-русски", "#e8998a"),
             ("media", "Подкасты и видео", "#a9bde0"), ("culture", "Культура", "#8fd2b4")]
 
@@ -24,7 +24,18 @@ def period(a, b):
     return f"{da}–{db} {MONTHS[mb-1]} {yb}"
 
 
-BG = (Path(__file__).resolve().parent.parent / "brand" / "cover-bg.jpg").as_uri()
+BRAND = Path(__file__).resolve().parent.parent / "brand"
+
+
+def background(issue_id):
+    """Своя иллюстрация выпуска (brand/issues/<id>.jpg), иначе общая картинка журнала."""
+    own = BRAND / "issues" / f"{issue_id}.jpg"
+    return (own if own.exists() else BRAND / "cover-bg.jpg").as_uri()
+
+
+def rgb(hex_, default):
+    h = (hex_ or default).lstrip("#")
+    return ",".join(str(int(h[i:i + 2], 16)) for i in (0, 2, 4))
 
 
 def page(d, number):
@@ -36,14 +47,16 @@ def page(d, number):
         f'<span class="chip"><i style="background:{c}"></i>{name} · {counts[k]}</span>'
         for k, name, c in SECTIONS if counts.get(k))
     title = e(d["title"])
+    theme = d.get("theme") or {}
+    bg, shade = background(d["id"]), rgb(theme.get("shade"), "#10181a")
     size = 96 if len(d["title"]) <= 28 else 80 if len(d["title"]) <= 44 else 66
     return f"""<!doctype html><html><head><meta charset="utf-8">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@600;700&display=block" rel="stylesheet">
 <style>
 *{{margin:0;box-sizing:border-box}}
 body{{width:{W}px;height:{H}px;overflow:hidden;color:#f6f1ea;font-family:Manrope,sans-serif;
-  background:#1c2729 url("{BG}") right center/cover no-repeat}}
-.shade{{position:absolute;inset:0;background:linear-gradient(90deg,rgba(16,24,26,.72) 0%,rgba(16,24,26,.45) 45%,rgba(16,24,26,0) 70%)}}
+  background:#1c2729 url("{bg}") right center/cover no-repeat}}
+.shade{{position:absolute;inset:0;background:linear-gradient(90deg,rgba({shade},.72) 0%,rgba({shade},.45) 45%,rgba({shade},0) 70%)}}
 .frame{{position:absolute;inset:26px;border:1px solid rgba(240,215,190,.55);border-radius:4px}}
 .in{{position:absolute;inset:70px 84px 62px;display:flex;flex-direction:column;max-width:760px}}
 .over{{font:700 15px/1 Manrope,sans-serif;letter-spacing:.28em;text-transform:uppercase;color:#f0c7a6}}
@@ -53,7 +66,7 @@ h1{{font:500 {size}px/1.0 "Cormorant Garamond",serif;margin-top:14px;letter-spac
 .no{{font-weight:700;font-size:21px;letter-spacing:.04em;color:#ffe9c9}}
 .no b{{font:500 40px/1 "Cormorant Garamond",serif;letter-spacing:0;margin-right:14px;color:#f0b48c}}
 .chips{{display:flex;gap:9px;flex-wrap:wrap;max-width:740px}}
-.chip{{font-weight:600;font-size:17px;padding:9px 15px;border-radius:99px;background:rgba(16,24,26,.4);
+.chip{{font-weight:600;font-size:17px;padding:9px 15px;border-radius:99px;background:rgba({shade},.4);
   border:1px solid rgba(240,215,190,.35);display:inline-flex;align-items:center;gap:9px;backdrop-filter:blur(6px)}}
 .chip i{{width:9px;height:9px;border-radius:50%;display:inline-block}}
 </style></head><body>

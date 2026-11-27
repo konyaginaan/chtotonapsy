@@ -51,7 +51,7 @@ def rows(d):
 
 def titles():
     """uid материала (<выпуск>-<k>) → название, по файлам выпусков (порядок как на сайте)."""
-    order = ["science", "journals", "community", "ru", "media", "culture"]
+    order = ["science", "neuro", "journals", "community", "ru", "media", "culture"]
     out = {}
     for f in sorted((ROOT / "issues").glob("*.json")):
         d = json.loads(f.read_text())

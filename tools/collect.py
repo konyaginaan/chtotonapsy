@@ -15,7 +15,8 @@ from email.utils import parsedate_to_datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-MAILTO = "konyagina.an@gmail.com"  # вежливый доступ к Crossref
+import os
+MAILTO = os.environ.get("CROSSREF_MAILTO", "")  # вежливый доступ к Crossref; адрес задаётся переменной окружения
 
 
 def get(url):
@@ -33,7 +34,7 @@ def clean(s, n=400):
 def journals(src, a, b):
     out = []
     for j in src:
-        url = (f"https://api.crossref.org/journals/{j['issn']}/works?rows=200&mailto={MAILTO}"
+        url = (f"https://api.crossref.org/journals/{j['issn']}/works?rows=200" + (f"&mailto={MAILTO}" if MAILTO else "") +
                f"&filter=from-created-date:{a},until-created-date:{b}")
         try:
             items = json.loads(get(url))["message"]["items"]

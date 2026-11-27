@@ -134,7 +134,7 @@ async function preview(request, env) {
 // ---------- Данные ----------
 
 function rowToIssue(r) {
-  return { ...r, sections: JSON.parse(r.sections) };
+  return { ...r, sections: JSON.parse(r.sections), theme: r.theme ? JSON.parse(r.theme) : null };
 }
 
 async function publishedIssues(env) {
@@ -232,6 +232,11 @@ function validate(d) {
   if (typeof d.post !== "string" || !d.post.trim()) errs.push("post");
   const plain = (d.post || "").replace(/<[^>]+>/g, "").replace(/&(amp|lt|gt|quot);/g, "x");
   if (plain.length > 4096) errs.push(`post: ${plain.length} знаков, лимит Telegram 4096`);
+  if (d.theme != null) {
+    const t = d.theme, hex = (x) => x == null || /^#[0-9a-fA-F]{6}$/.test(x);
+    if (typeof t !== "object" || !hex(t.accent) || !hex(t.accent_dark) || !hex(t.shade) || (t.art != null && typeof t.art !== "boolean"))
+      errs.push("theme: {art: bool, accent/accent_dark/shade: #rrggbb}");
+  }
   if (!Array.isArray(d.sections)) errs.push("sections");
   else
     for (const s of d.sections) {
@@ -253,12 +258,12 @@ async function postDraft(request, env) {
 
   const sections = d.sections.filter((s) => (s.items || []).length);
   await env.DB.prepare(
-    `INSERT INTO issues (id, title, lead, period_from, period_to, sections, post, status, created_at)
-     VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, 'draft', ?8)
+    `INSERT INTO issues (id, title, lead, period_from, period_to, sections, post, status, created_at, theme)
+     VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, 'draft', ?8, ?9)
      ON CONFLICT(id) DO UPDATE SET title=?2, lead=?3, period_from=?4, period_to=?5,
-       sections=?6, post=?7, status='draft', created_at=?8`
+       sections=?6, post=?7, status='draft', created_at=?8, theme=?9`
   ).bind(d.id, d.title, d.lead || "", d.period_from, d.period_to, JSON.stringify(sections), d.post,
-    new Date().toISOString()).run();
+    new Date().toISOString(), d.theme ? JSON.stringify(d.theme) : null).run();
 
   // Прошлый вариант черновика больше не публикуем — убираем у него кнопки.
   if (old && old.draft_msg_id)
@@ -290,8 +295,9 @@ async function updatePublished(request, env) {
   if (errs.length) return json({ error: "invalid", details: errs }, 400);
   const row = await env.DB.prepare("SELECT status, channel_msg_id FROM issues WHERE id = ?").bind(d.id).first();
   if (!row || row.status !== "published") return json({ error: "not_published" }, 409);
-  await env.DB.prepare("UPDATE issues SET title=?, lead=?, sections=?, post=? WHERE id=?")
-    .bind(d.title, d.lead || "", JSON.stringify(d.sections.filter((s) => (s.items || []).length)), d.post, d.id).run();
+  await env.DB.prepare("UPDATE issues SET title=?, lead=?, sections=?, post=?, theme=? WHERE id=?")
+    .bind(d.title, d.lead || "", JSON.stringify(d.sections.filter((s) => (s.items || []).length)), d.post,
+      d.theme ? JSON.stringify(d.theme) : null, d.id).run();
   let edited = null;
   if (row.channel_msg_id) {
     const r = await tg(env, "editMessageText", {

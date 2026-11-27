@@ -2,13 +2,14 @@
 
 export const SECTIONS = {
   science:   { title: "Наука и исследования", short: "Наука" },
+  neuro:     { title: "Мозг и психика",       short: "Мозг и психика" },
   journals:  { title: "Свежие номера журналов", short: "Журналы" },
   community: { title: "Сообщество",          short: "Сообщество" },
   ru:        { title: "Русскоязычное поле",  short: "По-русски" },
   media:     { title: "Подкасты и видео",    short: "Подкасты и видео" },
   culture:   { title: "Культура и медиа",    short: "Культура" },
 };
-const ORDER = ["science", "journals", "community", "ru", "media", "culture"];
+const ORDER = ["science", "neuro", "journals", "community", "ru", "media", "culture"];
 
 const MONTHS = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа",
   "сентября", "октября", "ноября", "декабря"];
@@ -59,13 +60,13 @@ const CSS = `
   --rule:#d9d2c8; --accent:#b9532a; --accent-ink:#943f1d; --soft:#e4ddd3; --mark:#f0c7a6;
   --gold:#b8955a; --plum:#1c2729;
   --grad:linear-gradient(100deg,#b9532a 0%,#d98a5f 45%,#c9a24a 100%);
-  --science:#3b7476; --journals:#a67a26; --community:#b9532a; --ru:#9c4436; --media:#56698a; --culture:#2f6a5a;
+  --science:#3b7476; --neuro:#6b5b8c; --journals:#a67a26; --community:#b9532a; --ru:#9c4436; --media:#56698a; --culture:#2f6a5a;
   --shadow:0 1px 2px rgba(20,30,30,.05),0 18px 50px rgba(20,30,30,.10);
 }
 @media (prefers-color-scheme:dark){:root{
   --bg:#121617; --paper:#1a2022; --ink:#ece7df; --muted:#a9afb1; --faint:#7a8184;
   --rule:#2d3538; --accent:#ec9468; --accent-ink:#f5b08c; --soft:#232b2e; --mark:#5a3a2a;
-  --science:#7fc4c2; --journals:#e2be6e; --community:#ec9468; --ru:#e48a78; --media:#9fb3d6; --culture:#7fc7a8;
+  --science:#7fc4c2; --neuro:#b3a3d6; --journals:#e2be6e; --community:#ec9468; --ru:#e48a78; --media:#9fb3d6; --culture:#7fc7a8;
   --shadow:0 14px 40px rgba(0,0,0,.35);
 }}
 *{box-sizing:border-box}
@@ -202,7 +203,7 @@ aside .sticky{position:sticky;top:24px}
   color:#f0c7a6;cursor:pointer}
 .sec-h{display:flex;align-items:center;gap:18px;margin-bottom:6px}
 .sec-h img{width:72px;height:72px;border-radius:50%;box-shadow:0 0 0 2px var(--gold),0 10px 24px rgba(70,20,60,.18);flex:none}
-.sec-h h2{font-size:40px}
+.sec-h h2{font-size:40px;min-width:0;overflow-wrap:anywhere}
 .sec-h .rule{flex:1;height:2px;background:linear-gradient(90deg,var(--c),transparent)}
 .sec-h .cnt{font:600 12px/1 Manrope,sans-serif;color:var(--c)}
 .inav{max-width:780px;margin:24px auto 80px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
@@ -262,8 +263,10 @@ dialog.note::backdrop{background:rgba(16,24,26,.55);backdrop-filter:blur(5px)}
   .item h3{font-size:23px}
   .ihead{padding:96px 0 130px}
   .ihead .lead{font-size:17px}
-  .sec-h img{width:56px;height:56px}
-  .sec-h h2{font-size:31px}
+  .sec-h{gap:12px}
+  .sec-h img{width:48px;height:48px}
+  .sec-h h2{font-size:27px}
+  .ihero{background-position:72% center}
   .inav{grid-template-columns:1fr}
   .inav .r{grid-column:1}
   .tg span{display:none}
@@ -277,7 +280,9 @@ dialog.note::backdrop{background:rgba(16,24,26,.55);backdrop-filter:blur(5px)}
 `;
 // Картинки оформления лежат в public/assets: на воркере их отдаёт статика, на Pages их копирует сборка.
 const css = () => CSS.replaceAll("{{B}}", B);
-const em = (key) => `${B}/assets/${key}.webp`;
+// У раздела «Мозг и психика» пока нет своей эмблемы — берём научную.
+const EMBLEM = { neuro: "science" };
+const em = (key) => `${B}/assets/${EMBLEM[key] || key}.webp`;
 // Психоделические волны-разделители (цвета из иллюстраций ChatGPT).
 const WAVES = `<div class="fade" aria-hidden="true"></div>`;
 
@@ -461,12 +466,25 @@ ${items.length ? `<div class="tools"><input class="search" type="search" placeho
   });
 }
 
+// Облик выпуска: своя картинка в шапке (public/assets/issues/<id>.webp) и свои акцентные цвета.
+// Цвета проверены в validate() как #rrggbb, поэтому их можно вставлять в CSS как есть.
+function themeStyle(issue) {
+  const t = issue.theme;
+  if (!t) return "";
+  const id = esc(issue.id), rules = [];
+  if (t.accent) rules.push(`:root{--accent:${t.accent};--accent-ink:color-mix(in srgb,${t.accent} 80%,#000)}`);
+  if (t.accent_dark) rules.push(`@media (prefers-color-scheme:dark){:root{--accent:${t.accent_dark};--accent-ink:color-mix(in srgb,${t.accent_dark} 85%,#fff)}}`);
+  if (t.art) rules.push(`.ihero{background-image:url("${B}/assets/issues/${id}.webp")}@media (max-width:900px){.ihero{background-image:url("${B}/assets/issues/${id}-900.webp")}}`);
+  if (t.shade) rules.push(`.ihero:before{background:linear-gradient(90deg,${t.shade}e6,${t.shade}99 50%,${t.shade}26)}`);
+  return `<style>${rules.join("")}</style>`;
+}
+
 export function renderIssue(issue, { prev, next }, env) {
   B = env.BASE || "";
   const secs = sorted(issue.sections);
   const n = countItems(issue);
   const uids = new Map(flat(issue).map((x) => [x.it, x.uid]));
-  const body = `
+  const body = `${themeStyle(issue)}
 ${issue.status === "draft" ? `<div class="draft">Черновик — ещё не опубликован в канале</div>` : ""}
 <section class="ihero"><div class="wrap">
 <header class="ihead">
