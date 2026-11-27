@@ -114,7 +114,9 @@ h1,h2,h3{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;line-hei
 /* свежий выпуск */
 .feat{position:relative;margin-top:-60px;z-index:2;background:var(--paper);border-radius:4px;box-shadow:var(--shadow);
   display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);overflow:hidden;border:1px solid var(--rule)}
-.feat .cv{display:flex;align-items:center;background:var(--plum) url("{{B}}/assets/cover-bg-900.webp") center/cover}
+.feat .cv{display:flex;align-items:center;position:relative;overflow:hidden;background:var(--plum)}
+.feat .cv .bg{position:absolute;inset:-30px;background:center/cover no-repeat;filter:blur(22px) brightness(.55);transform:scale(1.1)}
+.feat .cv img{position:relative}
 .feat .cv img{width:100%;height:auto;aspect-ratio:16/9;box-shadow:0 20px 50px rgba(20,0,30,.45)}
 .feat .tx{padding:clamp(24px,4vw,44px);display:flex;flex-direction:column;justify-content:center}
 .feat h2{font-size:clamp(32px,4vw,48px);margin:12px 0 14px}
@@ -397,7 +399,7 @@ export function renderIndex(issues, env) {
   const total = issues.reduce((n, is) => n + countItems(is), 0);
 
   const feat = last ? `<section class="wrap"><div class="feat">
-<a class="cv" href="${issueHref(last.id)}"><img src="${B}/cover/${esc(last.id)}.jpg" alt="Обложка выпуска № ${last.number}" onerror="this.parentNode.style.display='none'"></a>
+<a class="cv" href="${issueHref(last.id)}">${last.theme && last.theme.art ? `<span class="bg" style="background-image:url('${B}/assets/issues/${esc(last.id)}-900.webp')"></span>` : ""}<img src="${B}/cover/${esc(last.id)}.jpg" alt="Обложка выпуска № ${last.number}" onerror="this.parentNode.style.display='none'"></a>
 <div class="tx"><div class="over">Свежий выпуск · № ${last.number} · ${esc(period(last.period_from, last.period_to))}</div>
 <h2><a href="${issueHref(last.id)}">${esc(last.title)}</a></h2>
 <p class="lead">${esc(last.lead)}</p>
