@@ -304,7 +304,7 @@ ym(${id},"init",{clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor
   document.addEventListener("click",function(e){
     var r=e.target.closest("[data-r]"); if(r) return goal("retelling",{uid:r.dataset.r});
     var a=e.target.closest("a[href]"); if(!a) return;
-    if(/t\.me\//.test(a.href)) return goal("telegram");
+    if(a.href.indexOf("//t.me/")>-1) return goal("telegram");
     if(a.closest(".item h3, .arts, .nf")) goal("source",{url:a.href});
   });
   document.addEventListener("toggle",function(e){ if(e.target.matches&&e.target.matches("details.sec")&&e.target.open) goal("section",{key:e.target.id}); },true);
